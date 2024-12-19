@@ -16,8 +16,13 @@ class _TaskspageState extends State<Taskspage> {
     TaskContainer(taskName: "Task 3"),
     TaskContainer(taskName: "Task 4"),
     TaskContainer(taskName: "Task 5"),
+    TaskContainer(taskName: "Task 6"),
+    TaskContainer(taskName: "Task 7"),
+    TaskContainer(taskName: "Task 8"),
+    TaskContainer(taskName: "Task 9"),
+    
   ];
-
+  int get taskCount => tasks.length;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +60,7 @@ class _TaskspageState extends State<Taskspage> {
                         ),
                       ),
                       Text(
-                        "5 Tasks Today",
+                        "$taskCount Tasks Today",
                         style: TextStyle(
                           fontSize: 36,
                           color: Color(0xFF50b484),
@@ -67,7 +72,7 @@ class _TaskspageState extends State<Taskspage> {
                   Image.asset(
                     'assets/images/small_white_logo.png',
                     height: 120,
-                    width: 120,
+                    width: 100,
                   ),
                 ],
               ),
@@ -109,6 +114,62 @@ class _TaskspageState extends State<Taskspage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavBar(),
+    );
+  }
+}
+class BottomNavBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Bottom Navigation Bar
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: Color(0xFF384454),
+          borderRadius: BorderRadius.horizontal(
+            left: Radius.circular(20),
+            right: Radius.circular(20),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            BottomNavItem(icon: Icons.home_outlined, label: 'Home', isActive: true),
+            BottomNavItem(icon: Icons.task_outlined, label: 'Tasks'),
+            BottomNavItem(icon: Icons.access_time_outlined, label: 'Promo'),
+            BottomNavItem(icon: Icons.menu_book_outlined, label: 'Log'),
+            BottomNavItem(icon: Icons.person_outline, label: 'Me'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class BottomNavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+
+  const BottomNavItem({
+    Key? key,
+    required this.icon,
+    required this.label,
+    this.isActive = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: isActive ? Colors.green : Colors.white),
+        Text(
+          label,
+          style: TextStyle(color: isActive ? Colors.green : Colors.white),
+        ),
+      ],
     );
   }
 }
