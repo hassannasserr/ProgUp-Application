@@ -103,7 +103,10 @@ class Profilepage extends StatelessWidget {
                     child: Column(
                       children: [
                         OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/changepass');
+
+                          },
                           style: OutlinedButton.styleFrom(
                             minimumSize: Size(double.infinity, 50),
                             backgroundColor: Colors.transparent,
@@ -122,7 +125,8 @@ class Profilepage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                          },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: Colors.red),
                             minimumSize: Size(double.infinity, 50),

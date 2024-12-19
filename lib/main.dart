@@ -6,6 +6,7 @@ import 'package:srs_app/pages/Homepage.dart';
 import 'package:srs_app/pages/taskspage.dart';
 import 'package:srs_app/pages/SleepPage.dart';
 import 'package:srs_app/pages/WakeUpPage.dart';
+import 'package:srs_app/pages/ChangePass.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -17,12 +18,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
-       home: Homepage(),
+       //home: Homepage(),
        //home: Login(),
+      home: Profilepage(),
+      //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),
         '/signup': (context) => Signup(),
         '/taskspage': (context) => Taskspage(),
+        '/changepass': (context) => ChangePass(),
+
+
       },
       
     );
