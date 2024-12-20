@@ -12,6 +12,9 @@ import 'package:srs_app/pages/Taskpage.dart';
 
 import 'dart:io';
 
+import 'package:srs_app/pages/FirstPage_Stress.dart';
+
+
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
        //home:Wakeuppage(),
 
       // home: TasksPage(),
+
       home: Startpage(),
 
        //home: Homepage(),
