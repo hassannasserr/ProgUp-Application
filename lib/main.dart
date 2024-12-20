@@ -9,6 +9,8 @@ import 'package:srs_app/pages/SleepPage.dart';
 import 'package:srs_app/pages/WakeUpPage.dart';
 import 'package:srs_app/pages/ChangePass.dart';
 import 'dart:io';
+import 'package:srs_app/pages/FirstPage_Stress.dart';
+
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
@@ -30,11 +32,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
       // home: TasksPage(),
-      home: Startpage(),
+    //  home: Startpage(),
        //home: Homepage(),
        //home: Login(),
      // home: Profilepage(),
-
+       home:SocialActivityPage(),
       //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),
