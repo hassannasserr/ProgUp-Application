@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../api_service.dart'; // Update this import path
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -8,6 +9,16 @@ class Login extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<Login> {
+  // Add controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
+  // Add API service
+  final ApiService api = ApiService();
+  
+  // Add loading state
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,16 +32,14 @@ class _MyWidgetState extends State<Login> {
               color: Color(0xFF384454),
               child: Column(
                 children: [
-                  // Image at the top of the page
                   Padding(
-                    padding: const EdgeInsets.only(top: 50), // Adjust the padding as needed
+                    padding: const EdgeInsets.only(top: 50),
                     child: Image.asset(
-                      'assets/images/logo_main.png', // Replace with your image path
+                      'assets/images/logo_main.png',
                       height: 300,
                       width: 400,
                     ),
                   ),
-                  // Triangle and Login text
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
@@ -38,10 +47,9 @@ class _MyWidgetState extends State<Login> {
                         alignment: Alignment.center,
                         children: [
                           CustomPaint(
-                            size: Size(400, 100), // Triangle dimensions
+                            size: Size(400, 100),
                             painter: TrianglePainter(),
                           ),
-                          // Centered Login Text
                           const Text(
                             'Login',
                             style: TextStyle(
@@ -57,12 +65,12 @@ class _MyWidgetState extends State<Login> {
                 ],
               ),
             ),
-            // Login Form
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   TextField(
+                    controller: emailController, // Add controller
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -77,6 +85,7 @@ class _MyWidgetState extends State<Login> {
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: passwordController, // Add controller
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -93,30 +102,72 @@ class _MyWidgetState extends State<Login> {
                 ],
               ),
             ),
-            // Login Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/taskspage');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF384454),
-                minimumSize: Size(390, 41),
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.zero, // Makes the border rectangular
+            isLoading 
+              ? CircularProgressIndicator(color: Colors.white)
+              : ElevatedButton(
+                  onPressed: () async {
+                    // Basic validation
+                    if (emailController.text.isEmpty || 
+                        passwordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please fill all fields')),
+                      );
+                      return;
+                    }
+
+                    // Show loading
+                    setState(() => isLoading = true);
+
+                    try {
+                      // Try to login
+                      final result = await api.login(
+                        emailController.text,
+                        passwordController.text,
+                      );
+
+                      if (result['success']) {
+                        // Login successful
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Login successful!')),
+                        );
+                        
+                        // Store user data if needed
+                        // final userData = result['user'];
+                        
+                        // Navigate to tasks page
+                        Navigator.pushReplacementNamed(context, '/taskspage');
+                      } else {
+                        // Login failed
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(result['message'] ?? 'Login failed')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('An error occurred. Please try again.')),
+                      );
+                    } finally {
+                      // Hide loading
+                      setState(() => isLoading = false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF384454),
+                    minimumSize: Size(390, 41),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            // Register Button
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -145,19 +196,18 @@ class _MyWidgetState extends State<Login> {
   }
 }
 
-// CustomPainter to draw a downward triangle with a flat top
 class TrianglePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFF24282e) // Triangle color
+      ..color = Color(0xFF24282e)
       ..style = PaintingStyle.fill;
 
     final path = Path();
-    path.moveTo(0, size.height); // Bottom-left corner
-    path.lineTo(size.width, size.height); // Bottom-right corner
-    path.lineTo(size.width / 2, 0); // Top-center point
-    path.close(); // Completes the triangle
+    path.moveTo(0, size.height);
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width / 2, 0);
+    path.close();
 
     canvas.drawPath(path, paint);
   }
