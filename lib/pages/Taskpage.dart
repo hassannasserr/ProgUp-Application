@@ -54,6 +54,12 @@ class TasksPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {
                         // أضف وظيفة عند الضغط على الزر
+                        showDialog(
+                       context: context,
+                       builder: (BuildContext context) {
+                        return AddTaskDialog();
+                       },
+                      );
                       },
                       icon: const Icon(Icons.add, color: Colors.white),
                       label: const Text(
@@ -210,6 +216,190 @@ class BottomNavItem extends StatelessWidget {
           style: TextStyle(color: isActive ? Colors.green : Colors.white),
         ),
       ],
+    );
+  }
+}
+
+class AddTaskDialog extends StatefulWidget {
+  @override
+  _AddTaskDialogState createState() => _AddTaskDialogState();
+}
+
+class _AddTaskDialogState extends State<AddTaskDialog> {
+  final _formKey = GlobalKey<FormState>();
+  String taskName = '';
+  String taskType = '';
+  String taskDetails = '';
+  DateTime? taskDeadline;
+
+  final List<String> taskTypes = ['Study', 'Project', 'Assignment', 'Others'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8, // Set the width to 80% of the screen width
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: const Color(0xFF384454),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Add Task', style: TextStyle(color: Colors.white, fontSize: 20)),
+            SizedBox(height: 16.0),
+            Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    style: TextStyle(color: Colors.white), // Set the input text color to white
+                    decoration: InputDecoration(
+                      labelText: 'Task Name',
+                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                      ),
+                    ),
+                    onSaved: (value) {
+                      taskName = value ?? '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a task name';
+                      }
+                      return null;
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: taskType.isEmpty ? null : taskType,
+                    borderRadius: BorderRadius.circular(20.0),
+                    //change the color of the dropdown menu border
+                    
+                    items: taskTypes.map((String type) {
+                      return DropdownMenuItem<String>(
+                        value: type,
+                        child: Text(type, style: TextStyle(color: Colors.white)),
+                      );
+                    }).toList(),
+                    dropdownColor: Color(0xFF384454), // Set the background color of the dropdown menu
+                    decoration: InputDecoration(
+                      labelText: 'Task Type',
+                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        taskType = value ?? '';
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a task type';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    style: TextStyle(color: Colors.white), // Set the input text color to white
+                    decoration: InputDecoration(
+                      labelText: 'Task Details',
+                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                      ),
+                    ),
+                    onSaved: (value) {
+                      taskDetails = value ?? '';
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter task details';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    style: TextStyle(color: Colors.white), // Set the input text color to white
+                    decoration: InputDecoration(
+                      labelText: 'Task Deadline',
+                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                      ),
+                    ),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (picked != null && picked != taskDeadline) {
+                        setState(() {
+                          taskDeadline = picked;
+                        });
+                      }
+                    },
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: taskDeadline == null
+                          ? ''
+                          : "${taskDeadline!.toLocal()}".split(' ')[0],
+                    ),
+                    validator: (value) {
+                      if (taskDeadline == null) {
+                        return 'Please select a task deadline';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      // Add your task saving logic here
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Text('Add Task'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
