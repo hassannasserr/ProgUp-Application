@@ -283,16 +283,13 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GestureDetector(
-          onTap: () {
+    return GestureDetector(
+     onTap: () {
             // Navigate to the respective page
             if (label == 'Home') {
-              Navigator.pushNamed(context, '/taskspage');
+              Navigator.pushNamed(context, '/homepage');
             } else if (label == 'Tasks') {
-              //Navigator.pushNamed(context, '/taskspage');
+              Navigator.pushNamed(context, '/taskspage');
               print("Tasks");
             } else if (label == 'Promo') {
              // Navigator.pushNamed(context, '');
@@ -304,16 +301,19 @@ class BottomNavItem extends StatelessWidget {
               Navigator.pushNamed(context, '/profile');
             }
           },
-          child: Icon(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
             icon,
             color: isActive ? Colors.green : Colors.white,
           ),
-        ),
-        Text(
-          label,
-          style: TextStyle(color: isActive ? Colors.green : Colors.white),
-        ),
-      ],
+          Text(
+            label,
+            style: TextStyle(color: isActive ? Colors.green : Colors.white),
+          ),
+        ],
+      ),
     );
   }
 }

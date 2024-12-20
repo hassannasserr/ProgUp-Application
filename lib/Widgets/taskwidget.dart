@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 class TaskContainer extends StatelessWidget {
   final String taskName;
-
+  final Color color;
   // Constructor to accept the task name
   const TaskContainer({
     Key? key,
     required this.taskName,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class TaskContainer extends StatelessWidget {
       width: screenWidth, // Automatically adjusts to parent width
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF274472), // Navy blue color
+        color: color, // Navy blue color
         borderRadius: BorderRadius.circular(20), // Rounded corners
       ),
       child: Row(
