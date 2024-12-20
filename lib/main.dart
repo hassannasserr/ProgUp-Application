@@ -21,13 +21,15 @@ class MyApp extends StatelessWidget {
        //home:Wakeuppage(),
        //home: Homepage(),
        //home: Login(),
-      home: RecommendationsPage(),
+      home: Profilepage(),
       //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),
         '/signup': (context) => Signup(),
         '/taskspage': (context) => TasksPage(),
         '/changepass': (context) => ChangePass(),
+        '/homepage': (context) => HomePage(),
+        '/profile': (context) => Profilepage(),
 
 
 

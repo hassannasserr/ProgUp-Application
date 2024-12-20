@@ -4,7 +4,6 @@ class RecommendationsPage extends StatefulWidget {
   @override
   State<RecommendationsPage> createState() => _RecommendationsPageState();
 }
-
 class _RecommendationsPageState extends State<RecommendationsPage> {
   // Colors for each section
   final Map<String, Color> sectionColors = {
