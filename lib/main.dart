@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
         '/changepass': (context) => ChangePass(),
         '/homepage': (context) => HomePage(),
         '/profile': (context) => Profilepage(),
+        '/recommendations': (context) => RecommendationsPage(),
+
+
 
 
 

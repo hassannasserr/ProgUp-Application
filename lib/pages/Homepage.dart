@@ -100,6 +100,11 @@ class _TaskspageState extends State<HomePage> {
                 },
               ),
               Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigate to the RecommendationsPage
+                    Navigator.pushNamed(context, '/recommendations');
+                  },
                 child: Container(
                    width: 300, // Automatically adjusts to parent width
                    height: 50,
@@ -119,7 +124,8 @@ class _TaskspageState extends State<HomePage> {
                    ),
                  ),
                 ),
-              )
+              ) ,
+              ),
             ],
           ),
         ),
