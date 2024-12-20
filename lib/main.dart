@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:srs_app/pages/ProfilePage.dart';
+import 'package:srs_app/pages/RecommendationsPage.dart';
 import 'package:srs_app/pages/Signup.dart';
 import 'package:srs_app/pages/login.dart';
 import 'package:srs_app/pages/Homepage.dart';
@@ -20,13 +21,14 @@ class MyApp extends StatelessWidget {
        //home:Wakeuppage(),
        //home: Homepage(),
        //home: Login(),
-      home: Profilepage(),
+      home: RecommendationsPage(),
       //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),
         '/signup': (context) => Signup(),
         '/taskspage': (context) => TasksPage(),
         '/changepass': (context) => ChangePass(),
+
 
 
       },

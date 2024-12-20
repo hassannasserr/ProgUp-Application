@@ -6,6 +6,14 @@ class RecommendationsPage extends StatefulWidget {
 }
 
 class _RecommendationsPageState extends State<RecommendationsPage> {
+  // Colors for each section
+  final Map<String, Color> sectionColors = {
+    "Task Management": Color(0xFF283c64),
+    "Sleep Recommendations": Color(0xFF386454),
+    "Productivity Recommendations": Color(0xFF702c54),
+
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +24,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pushNamed(context,'/taskspage');
+            Navigator.pushNamed(context, '/taskspage');
           },
         ),
       ),
@@ -45,7 +53,6 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                   ),
                 ],
               ),
-           //   SizedBox(height: 1),
               Text(
                 "Here It's\nYour Recommendations",
                 style: TextStyle(
@@ -56,40 +63,34 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                 ),
               ),
               SizedBox(height: 5),
-              _buildSectionTitle("Task Management"),
-              _buildRecommendationCard(
+              _buildSection("Task Management", [
                 "You have a high-priority task due tomorrow. Consider completing it today to avoid last-minute stress.",
-              ),
-              _buildRecommendationCard(
                 "You haven't scheduled time for task X this week. Add it to your schedule to stay on track.",
-              ),
-              _buildRecommendationCard(
                 "Break your task 'Prepare for Presentation' into smaller subtasks to make it more manageable.",
-              ),
-              SizedBox(height: 5),
-              _buildSectionTitle("Sleep Recommendations"),
-              _buildRecommendationCard(
+              ]),
+              _buildSection("Sleep Recommendations", [
                 "You slept less than 6 hours last night. Aim for at least 7-8 hours of sleep tonight to boost productivity.",
-                color: Colors.green,
-              ),
-              _buildRecommendationCard(
                 "Your sleep pattern is inconsistent. Try to go to bed at the same time every night for better quality rest.",
-                color: Colors.green,
-              ),
-              SizedBox(height: 5),
-              _buildSectionTitle("Productivity Recommendations"),
-              _buildRecommendationCard(
+              ]),
+              _buildSection("Productivity Recommendations", [
                 "You've completed 3 Pomodoro sessions today. Take a 15-30 minute break to recharge.",
-                color: Colors.purple,
-              ),
-              _buildRecommendationCard(
                 "You are most productive in the morning. Schedule your high-priority tasks during this time.",
-                color: Colors.purple,
-              ),
+              ]),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSection(String title, List<String> recommendations) {
+    final Color color = sectionColors[title] ?? Colors.grey; //
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(title),
+        ...recommendations.map((text) => _buildRecommendationCard(text, color: color)).toList(),
+      ],
     );
   }
 
@@ -101,12 +102,11 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
         fontSize: 20,
         fontWeight: FontWeight.bold,
         fontFamily: 'Poetsen',
-
       ),
     );
   }
 
-  Widget _buildRecommendationCard(String text, {Color color = Colors.blue}) {
+  Widget _buildRecommendationCard(String text, {Color color = const Color(0xFF283c64)}) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(15),
@@ -118,7 +118,9 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
         text,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 14,
+          fontSize: 15,
+          fontFamily: 'AbhayaLibre',
+
         ),
       ),
     );
