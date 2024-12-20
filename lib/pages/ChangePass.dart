@@ -4,7 +4,11 @@ class ChangePass extends StatefulWidget {
   const ChangePass({Key? key}) : super(key: key);
 
   @override
+
+  State<ChangePass> createState() => _ChangePassState();
+
   _ChangePassState createState() => _ChangePassState();
+
 }
 
 class _ChangePassState extends State<ChangePass> {
@@ -198,13 +202,32 @@ class BottomNavItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: isActive ? Colors.green : Colors.white),
+        GestureDetector(
+          onTap: () {
+            // Navigate to the respective page
+            if (label == 'Home') {
+              Navigator.pushNamed(context, '/homepage');
+            } else if (label == 'Tasks') {
+              Navigator.pushNamed(context, '/taskspage');
+              print("Tasks");
+            } else if (label == 'Promo') {
+              // Navigator.pushNamed(context, '');
+              print("Promo");
+            } else if (label == 'Log') {
+              //Navigator.pushNamed(context, '/log');
+              print("Log");
+            } else if (label == 'Me') {
+              Navigator.pushNamed(context, '/profile');
+            }
+          },
+          child: Icon(
+            icon,
+            color: isActive ? Colors.green : Colors.white,
+          ),
+        ),
         Text(
           label,
-          style: TextStyle(
-            color: isActive ? Colors.green : Colors.white,
-            fontSize: 12,
-          ),
+          style: TextStyle(color: isActive ? Colors.green : Colors.white),
         ),
       ],
     );
