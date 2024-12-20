@@ -10,17 +10,16 @@ class HomePage extends StatefulWidget {
 
 class _TaskspageState extends State<HomePage> {
   // List of tasks
-  final List<TaskContainer> tasks = [
-    TaskContainer(taskName: "Task 1"),
-    TaskContainer(taskName: "Task 2"),
-    TaskContainer(taskName: "Task 3"),
-    TaskContainer(taskName: "Task 4"),
-    TaskContainer(taskName: "Task 5"),
-    TaskContainer(taskName: "Task 6"),
-    TaskContainer(taskName: "Task 7"),
-    TaskContainer(taskName: "Task 8"),
-    TaskContainer(taskName: "Task 9"),
-    
+    final List<String> tasks = [
+    "Task 1",
+    "Task 2",
+    "Task 3",
+    "Task 4",
+    "Task 5",
+    "Task 6",
+    "Task 7",
+    "Task 8",
+    "Task 9",
   ];
   int get taskCount => tasks.length;
   @override
@@ -83,9 +82,20 @@ class _TaskspageState extends State<HomePage> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
+                  Color containerColor;
+                  if (index % 3 == 0) {
+                containerColor = Color(0xFF283c64);
+                } else if (index % 3 == 1) {
+                containerColor = Color(0xFF386454);
+                } else {
+                 containerColor = Color(0xFF702c54);
+                }
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: tasks[index], // TaskContainer
+                    child: TaskContainer(
+                  taskName: tasks[index],
+                  color: containerColor,
+                ), // TaskContainer
                   );
                 },
               ),
@@ -168,9 +178,9 @@ class BottomNavItem extends StatelessWidget {
           onTap: () {
             // Navigate to the respective page
             if (label == 'Home') {
-              Navigator.pushNamed(context, '/taskspage');
+              Navigator.pushNamed(context, '/homepage');
             } else if (label == 'Tasks') {
-              //Navigator.pushNamed(context, '/taskspage');
+              Navigator.pushNamed(context, '/taskspage');
               print("Tasks");
             } else if (label == 'Promo') {
              // Navigator.pushNamed(context, '');
