@@ -5,6 +5,9 @@ class Profilepage extends StatefulWidget {
 
   @override
   State<Profilepage> createState() => _ProfilepageState();
+
+  _ProfilepageState createState() => _ProfilepageState();
+
 }
 
 class _ProfilepageState extends State<Profilepage> {
@@ -212,7 +215,12 @@ class _ProfileFieldState extends State<ProfileField> {
         focusNode: _focusNode,
         obscureText: widget.isPassword && _isObscured,
         keyboardType: widget.inputType,
+        readOnly: true,
         decoration: InputDecoration(
+          //change text color
+          hintStyle: TextStyle(
+            color: Colors.white,
+          ),
           prefixIcon: Icon(widget.icon),
           hintText: widget.hint,
           labelText: widget.label,

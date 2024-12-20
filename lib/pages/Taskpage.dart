@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
+  const TasksPage({Key? key}) : super(key: key);
   @override
+  _TasksPageState createState() => _TasksPageState();
+}
+class _TasksPageState extends State<TasksPage> {
+    @override
   final List<String> tasks = [
     "Task 1",
     "Task 2",

@@ -4,7 +4,11 @@ class ChangePass extends StatefulWidget {
   const ChangePass({Key? key}) : super(key: key);
 
   @override
+
   State<ChangePass> createState() => _ChangePassState();
+
+  _ChangePassState createState() => _ChangePassState();
+
 }
 
 class _ChangePassState extends State<ChangePass> {
