@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
        home: Startpage(),
        //home: Homepage(),
        //home: Login(),
-      home: Profilepage(),
+     // home: Profilepage(),
       //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),
@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => Startpage(),
         '/sleep': (context) => SleepPage(),
         '/wakeup': (context) => Wakeuppage(),
-        '/taskspage': (context) => Taskspage(),
         '/changepass': (context) => ChangePass(),
       },
       
