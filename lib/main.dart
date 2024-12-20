@@ -8,8 +8,19 @@ import 'package:srs_app/pages/Homepage.dart';
 import 'package:srs_app/pages/SleepPage.dart';
 import 'package:srs_app/pages/WakeUpPage.dart';
 import 'package:srs_app/pages/ChangePass.dart';
+import 'dart:io';
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,7 +29,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
-       home: TasksPage(),
+      // home: TasksPage(),
+      home: Startpage(),
        //home: Homepage(),
        //home: Login(),
      // home: Profilepage(),

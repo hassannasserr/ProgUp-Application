@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Profilepage extends StatelessWidget {
+class Profilepage extends StatefulWidget {
   const Profilepage({super.key});
+
+  @override
+  _ProfilepageState createState() => _ProfilepageState();
+}
+
+class _ProfilepageState extends State<Profilepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +212,12 @@ class _ProfileFieldState extends State<ProfileField> {
         focusNode: _focusNode,
         obscureText: widget.isPassword && _isObscured,
         keyboardType: widget.inputType,
+        readOnly: true,
         decoration: InputDecoration(
+          //change text color
+          hintStyle: TextStyle(
+            color: Colors.white,
+          ),
           prefixIcon: Icon(widget.icon),
           hintText: widget.hint,
           labelText: widget.label,
