@@ -10,6 +10,8 @@ import 'package:srs_app/pages/SleepPage.dart';
 import 'package:srs_app/pages/WakeUpPage.dart';
 import 'package:srs_app/pages/ChangePass.dart';
 import 'package:srs_app/pages/pomodoro.dart';
+import 'package:srs_app/pages/Startpage.dart';
+import 'dart:io';
 void main() { 
  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
   @override
   _TasksPageState createState() => _TasksPageState();
 }
@@ -19,7 +19,6 @@ class _TasksPageState extends State<TasksPage> {
     "Task 9",
   ];
 
-  TasksPage({super.key});
   @override
   Widget build(BuildContext context) {
     // الحصول على التاريخ الحالي
