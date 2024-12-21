@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import '../api_service.dart'; // Update this import path
+import '../api_service.dart'; // Ensure this import path is correct
 
 class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  State<Login> createState() => _MyWidgetState();
+  State<Login> createState() => _LoginState();
 }
 
-class _MyWidgetState extends State<Login> {
-  // Add controllers
+class _LoginState extends State<Login> {
+  // Controllers for text fields
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  
-  // Add API service
+
+  // API service instance
   final ApiService api = ApiService();
-  
-  // Add loading state
+
+  // Loading state for the button
   bool isLoading = false;
 
   @override
@@ -27,6 +26,7 @@ class _MyWidgetState extends State<Login> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Header section with logo and title
             Container(
               height: 400,
               width: double.infinity,
@@ -66,12 +66,15 @@ class _MyWidgetState extends State<Login> {
                 ],
               ),
             ),
+            // Login form fields
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  // Email field
                   TextField(
-                    controller: emailController, // Add controller
+                    controller: emailController,
+
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -85,8 +88,10 @@ class _MyWidgetState extends State<Login> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
+                  // Password field
                   TextField(
-                    controller: passwordController, // Add controller
+                    controller: passwordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -103,72 +108,79 @@ class _MyWidgetState extends State<Login> {
                 ],
               ),
             ),
-            isLoading 
-              ? const CircularProgressIndicator(color: Colors.white)
-              : ElevatedButton(
-                  onPressed: () async {
-                    // Basic validation
-                    if (emailController.text.isEmpty || 
-                        passwordController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please fill all fields')),
-                      );
-                      return;
-                    }
-
-                    // Show loading
-                    setState(() => isLoading = true);
-
-                    try {
-                      // Try to login
-                      final result = await api.login(
-                        emailController.text,
-                        passwordController.text,
-                      );
-
-                      if (result['success']) {
-                        // Login successful
+            // 'Login' button with loading indicator
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : ElevatedButton(
+                    onPressed: () async {
+                      // Basic validation
+                      if (emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login successful!')),
+                          const SnackBar(content: Text('Please fill all fields')),
                         );
-                        
-                        // Store user data if needed
-                        // final userData = result['user'];
-                        
-                        // Navigate to tasks page
-                        Navigator.pushReplacementNamed(context, '/taskspage');
-                      } else {
-                        // Login failed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(result['message'] ?? 'Login failed')),
-                        );
+                        return;
                       }
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('An error occurred. Please try again.')),
-                      );
-                    } finally {
-                      // Hide loading
-                      setState(() => isLoading = false);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF384454),
-                    minimumSize: const Size(390, 41),
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+
+
+                      // Show loading indicator
+                      setState(() => isLoading = true);
+
+                      try {
+                        // Try to login
+                        Map<String, dynamic> result = await api.login(
+                          emailController.text,
+                          passwordController.text,
+
+                        );
+
+                        if (result['success']) {
+                          // Login successful
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(result['message'] ?? 'Login successful!')),
+                          );
+
+                          // Access user data if needed
+                          Map<String, dynamic> userData = result['user'];
+                          // You can store userData locally if necessary
+
+                          // Navigate to tasks page
+                          Navigator.pushReplacementNamed(context, '/taskspage');
+                        } else {
+                          // Login failed
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(result['message'] ?? 'Login failed')),
+                          );
+                        }
+                      } catch (e) {
+                        // Handle any errors
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('An error occurred. Please try again.')),
+                        );
+                      } finally {
+                        // Hide loading indicator
+                        setState(() => isLoading = false);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF384454),
+                      minimumSize: const Size(390, 41),
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+
                     ),
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+            // Link to signup page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -215,11 +227,4 @@ class TrianglePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-  }
 }

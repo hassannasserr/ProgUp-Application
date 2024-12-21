@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import '../api_service.dart'; // Update this import path
+import '../api_service.dart'; // Ensure this path is correct
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
 
   @override
-  State<Signup> createState() => _MyWidgetState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _MyWidgetState extends State<Signup> {
-  // Add controllers
+class _SignupState extends State<Signup> {
+  // Controllers for text fields
   final TextEditingController fnameController = TextEditingController();
   final TextEditingController lnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   
-  // Add API service
+  // API service instance
   final ApiService api = ApiService();
   
-  // Add loading state
+  // Loading state for the button
   bool isLoading = false;
 
   @override
@@ -29,6 +29,7 @@ class _MyWidgetState extends State<Signup> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Header section with logo and title
             Container(
               height: 400,
               width: double.infinity,
@@ -68,15 +69,18 @@ class _MyWidgetState extends State<Signup> {
                 ],
               ),
             ),
+            // Signup form fields
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  // First and last name fields
                   Row(
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: fnameController, // Add controller
+                          controller: fnameController,
+
                           decoration: const InputDecoration(
                             labelText: 'First Name',
                             labelStyle: TextStyle(color: Colors.white),
@@ -93,7 +97,8 @@ class _MyWidgetState extends State<Signup> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: TextField(
-                          controller: lnameController, // Add controller
+                          controller: lnameController,
+
                           decoration: const InputDecoration(
                             labelText: 'Last Name',
                             labelStyle: TextStyle(color: Colors.white),
@@ -109,8 +114,10 @@ class _MyWidgetState extends State<Signup> {
                       ),
                     ],
                   ),
+                  // Email field
                   TextField(
-                    controller: emailController, // Add controller
+                    controller: emailController,
+
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -124,8 +131,10 @@ class _MyWidgetState extends State<Signup> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
+                  // Password fields
                   TextField(
-                    controller: passwordController, // Add controller
+                    controller: passwordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -141,7 +150,8 @@ class _MyWidgetState extends State<Signup> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    controller: confirmPasswordController, // Add controller
+                    controller: confirmPasswordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -158,6 +168,7 @@ class _MyWidgetState extends State<Signup> {
                 ],
               ),
             ),
+            // 'Join now' button with loading indicator
             isLoading 
               ? const CircularProgressIndicator(color: Colors.white)
               : ElevatedButton(
@@ -166,7 +177,8 @@ class _MyWidgetState extends State<Signup> {
                     if (fnameController.text.isEmpty || 
                         lnameController.text.isEmpty || 
                         emailController.text.isEmpty || 
-                        passwordController.text.isEmpty) {
+                        passwordController.text.isEmpty ||
+                        confirmPasswordController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please fill all fields')),
                       );
@@ -181,34 +193,40 @@ class _MyWidgetState extends State<Signup> {
                       return;
                     }
 
-                    // Show loading
+                    // Show loading indicator
                     setState(() => isLoading = true);
 
                     try {
                       // Try to register user
-                      bool success = await api.registerUser(
+                      Map<String, dynamic> result = await api.registerUser(
                         fnameController.text,
                         lnameController.text,
                         emailController.text,
                         passwordController.text,
                       );
 
-                      if (success) {
+                      if (result['success']) {
+                        // Registration successful
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Registration successful!')),
+                          SnackBar(content: Text(result['message'] ?? 'Registration successful!')),
+
                         );
-                        Navigator.pushNamed(context, '/login');
+                        // Navigate to login page
+                        Navigator.pushReplacementNamed(context, '/login');
                       } else {
+                        // Registration failed
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Registration failed. Please try again.')),
+                          SnackBar(content: Text(result['message'] ?? 'Registration failed. Please try again.')),
+
                         );
                       }
                     } catch (e) {
+                      // Handle any errors
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('An error occurred. Please try again.')),
                       );
                     } finally {
-                      // Hide loading
+                      // Hide loading indicator
                       setState(() => isLoading = false);
                     }
                   },
@@ -229,11 +247,13 @@ class _MyWidgetState extends State<Signup> {
                     ),
                   ),
                 ),
+            // Link to login page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'have an account? ',
+                  'Have an account? ',
+
                   style: TextStyle(color: Colors.white),
                 ),
                 TextButton(

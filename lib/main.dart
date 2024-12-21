@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
-       home: const HomePage(),
-       //home: Homepage(),
-       //home: Login(),
-       // home: Profilepage(),
+
+       home: Login(),
+       //home: Profilepage(),
+
       //home: ChangePass(),
       routes: {
         '/login': (context) => const Login(),

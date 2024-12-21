@@ -8,7 +8,6 @@ class ChangePass extends StatelessWidget {
 
   State<ChangePass> createState() => _ChangePassState();
 
-  _ChangePassState createState() => _ChangePassState();
 
 }
 
