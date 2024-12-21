@@ -80,6 +80,7 @@ class _SignupState extends State<Signup> {
                       Expanded(
                         child: TextField(
                           controller: fnameController,
+
                           decoration: const InputDecoration(
                             labelText: 'First Name',
                             labelStyle: TextStyle(color: Colors.white),
@@ -97,6 +98,7 @@ class _SignupState extends State<Signup> {
                       Expanded(
                         child: TextField(
                           controller: lnameController,
+
                           decoration: const InputDecoration(
                             labelText: 'Last Name',
                             labelStyle: TextStyle(color: Colors.white),
@@ -115,6 +117,7 @@ class _SignupState extends State<Signup> {
                   // Email field
                   TextField(
                     controller: emailController,
+
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -131,6 +134,7 @@ class _SignupState extends State<Signup> {
                   // Password fields
                   TextField(
                     controller: passwordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -147,6 +151,7 @@ class _SignupState extends State<Signup> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: confirmPasswordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -204,6 +209,7 @@ class _SignupState extends State<Signup> {
                         // Registration successful
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(result['message'] ?? 'Registration successful!')),
+
                         );
                         // Navigate to login page
                         Navigator.pushReplacementNamed(context, '/login');
@@ -211,6 +217,7 @@ class _SignupState extends State<Signup> {
                         // Registration failed
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(result['message'] ?? 'Registration failed. Please try again.')),
+
                         );
                       }
                     } catch (e) {
@@ -246,6 +253,7 @@ class _SignupState extends State<Signup> {
               children: [
                 const Text(
                   'Have an account? ',
+
                   style: TextStyle(color: Colors.white),
                 ),
                 TextButton(

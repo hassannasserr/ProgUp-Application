@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SleepPage extends StatefulWidget {
+  const SleepPage({super.key});
+
   @override
   State<SleepPage> createState() => _SleepTimePageState();
 }
@@ -27,9 +29,9 @@ class _SleepTimePageState extends State<SleepPage> {
                   height: 300,
                   width: 400,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: const Text(
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
                     "Please let us know when did you sleep yesterday",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -44,9 +46,9 @@ class _SleepTimePageState extends State<SleepPage> {
             ),
             const SizedBox(height: 20),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 50),
-              child: const Align(
+            const Padding(
+              padding: EdgeInsets.only(left: 50),
+              child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Set Time",

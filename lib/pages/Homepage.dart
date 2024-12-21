@@ -25,16 +25,16 @@ class _TaskspageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF24282e),
+      backgroundColor: const Color(0xFF24282e),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
               // Greeting Text
-              Text(
+              const Text(
                 "Hello Abdo",
                 style: TextStyle(
                   fontSize: 25,
@@ -42,7 +42,7 @@ class _TaskspageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Task Count and Logo Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +50,7 @@ class _TaskspageState extends State<HomePage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "You've got",
                         style: TextStyle(
                           fontSize: 36,
@@ -60,7 +60,7 @@ class _TaskspageState extends State<HomePage> {
                       ),
                       Text(
                         "$taskCount Tasks Today",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 36,
                           color: Color(0xFF50b484),
                           fontWeight: FontWeight.bold,
@@ -75,30 +75,47 @@ class _TaskspageState extends State<HomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Task Containers List
               ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  Color containerColor;
-                  if (index % 3 == 0) {
-                containerColor = Color(0xFF283c64);
-                } else if (index % 3 == 1) {
-                containerColor = Color(0xFF386454);
-                } else {
-                 containerColor = Color(0xFF702c54);
-                }
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: TaskContainer(
-                  taskName: tasks[index],
-                  color: containerColor,
-                ), // TaskContainer
-                  );
-                },
-              ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: TaskData.studyTasks.length +
+                      TaskData.socialTasks.length +
+                      TaskData.physicalTasks.length +
+                      TaskData.otherTasks.length,
+                  itemBuilder: (context, index) {
+                    late TaskItem task;
+                    if (index < TaskData.studyTasks.length) {
+                      task = TaskData.studyTasks[index];
+                    } else if (index <
+                        TaskData.studyTasks.length +
+                            TaskData.socialTasks.length) {
+                      task = TaskData
+                          .socialTasks[index - TaskData.studyTasks.length];
+                    } else if (index <
+                        TaskData.studyTasks.length +
+                            TaskData.socialTasks.length +
+                            TaskData.physicalTasks.length) {
+                      task = TaskData.physicalTasks[index -
+                          TaskData.studyTasks.length -
+                          TaskData.socialTasks.length];
+                    } else {
+                      task = TaskData.otherTasks[index -
+                          TaskData.studyTasks.length -
+                          TaskData.socialTasks.length -
+                          TaskData.physicalTasks.length];
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: TaskContainer(
+                        taskName: task.name,
+                        color: task.color,
+                      ),
+                    );
+                  },
+                ),
               Center(
                 child: GestureDetector(
                   onTap: () {
@@ -113,7 +130,7 @@ class _TaskspageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(20), // Rounded corners
                   border: Border.all(color: Colors.pink, width: 2),
                  ),
-                 child: Center(
+                 child: const Center(
                    child: Text(
                      "Reccomendations",
                      style: TextStyle(
@@ -130,11 +147,13 @@ class _TaskspageState extends State<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
 class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Bottom Navigation Bar
@@ -142,19 +161,19 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 60,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFF384454),
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(20),
             right: Radius.circular(20),
           ),
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             BottomNavItem(icon: Icons.home_outlined, label: 'Home', isActive: true),
             BottomNavItem(icon: Icons.task_outlined, label: 'Tasks'),
-            BottomNavItem(icon: Icons.access_time_outlined, label: 'Promo'),
+            BottomNavItem(icon: Icons.access_time_outlined, label: 'Pomo'),
             BottomNavItem(icon: Icons.menu_book_outlined, label: 'Log'),
             BottomNavItem(icon: Icons.person_outline, label: 'Me'),
           ],
@@ -169,11 +188,11 @@ class BottomNavItem extends StatelessWidget {
   final bool isActive;
 
   const BottomNavItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.isActive = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -188,11 +207,11 @@ class BottomNavItem extends StatelessWidget {
             } else if (label == 'Tasks') {
               Navigator.pushNamed(context, '/taskspage');
               print("Tasks");
-            } else if (label == 'Promo') {
-             // Navigator.pushNamed(context, '');
-             print("Promo");
+            } else if (label == 'Pomo') {
+              Navigator.pushNamed(context, '/pomo');
+             
             } else if (label == 'Log') {
-              //Navigator.pushNamed(context, '/log');
+              Navigator.pushNamed(context, '/insights');
               print("Log");
             } else if (label == 'Me') {
               Navigator.pushNamed(context, '/profile');

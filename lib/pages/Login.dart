@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
                   // Email field
                   TextField(
                     controller: emailController,
+
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -90,6 +91,7 @@ class _LoginState extends State<Login> {
                   // Password field
                   TextField(
                     controller: passwordController,
+
                     decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
@@ -120,6 +122,7 @@ class _LoginState extends State<Login> {
                         return;
                       }
 
+
                       // Show loading indicator
                       setState(() => isLoading = true);
 
@@ -128,6 +131,7 @@ class _LoginState extends State<Login> {
                         Map<String, dynamic> result = await api.login(
                           emailController.text,
                           passwordController.text,
+
                         );
 
                         if (result['success']) {
@@ -173,6 +177,7 @@ class _LoginState extends State<Login> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
+
                     ),
                   ),
             // Link to signup page
