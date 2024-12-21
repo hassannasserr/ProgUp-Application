@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
+import 'package:srs_app/api_service.dart';
 class TasksPage extends StatefulWidget {
   @override
   _TasksPageState createState() => _TasksPageState();
@@ -465,11 +466,25 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                       style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed:() async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      // Add your task saving logic here
-                      Navigator.of(context).pop();
+
+                      // Call the addTask method from ApiService
+                      final response = await ApiService().addTask(
+                        taskName,
+                        taskDetails,
+                        taskDeadline!.toIso8601String(),
+                        taskType,
+                      );
+
+                      if (response['success']) {
+                        // Task added successfully
+                        Navigator.of(context).pop();
+                      } else {
+                        // Handle the error
+                        print('Failed to add task: ${response['message']}');
+                      }
                     }
                   },
                   child: const Text('Add Task'),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:srs_app/Widgets/insightwidget.dart';
 
-class insights extends StatefulWidget {
-  const insights({super.key});
+class Insights extends StatefulWidget {
+  const Insights({super.key});
 
   @override
-  State<insights> createState() => _insightsState();
+  State<Insights> createState() => _insightsState();
 }
 
-class _insightsState extends State<insights> {
+class _insightsState extends State<Insights> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
