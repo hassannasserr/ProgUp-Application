@@ -233,6 +233,7 @@ class _SleepTimePageState extends State<SleepPage> {
                   onPressed: () {
                     print(
                         "Selected Time: $selectedHour:${selectedMinute.toString().padLeft(2, '0')}:${selectedSecond.toString().padLeft(2, '0')} $selectedPeriod");
+                        Navigator.pushNamed(context, '/wakeup');
                   },
                   child: const Text(
                     "Save",

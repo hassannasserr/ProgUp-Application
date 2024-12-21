@@ -136,6 +136,7 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
               ),
               onPressed: () {
                 print("Social Hours: $socialHours, Stress Level: $stressLevel");
+                Navigator.pushNamed(context, '/homepage');
               },
               child: const Text(
                 "Start Scheduling",

@@ -152,7 +152,7 @@ class ApiService {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         // Task added successfully
         print('Task added successfully.');
         return {

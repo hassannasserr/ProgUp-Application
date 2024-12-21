@@ -69,6 +69,20 @@ class TaskContainer extends StatelessWidget {
 }
 
 class TaskData {
+  static final List<TaskItem> alltasks = [
+    TaskItem("Math Homework", Color(0xFF283c64)),
+    TaskItem("Read History Chapter", Color(0xFF283c64)),
+    TaskItem("Write Essay", Color(0xFF283c64)),
+    TaskItem("Call John", Color(0xFF386454)),
+    TaskItem("Birthday Party", Color(0xFF386454)),
+    TaskItem("Volunteer Work", Color(0xFF386454)),
+    TaskItem("Morning Jog", Color(0xFF702c54)),
+    TaskItem("Yoga Class", Color(0xFF702c54)),
+    TaskItem("Gym Workout", Color(0xFF702c54)),
+    TaskItem("Grocery Shopping", Colors.grey),
+    TaskItem("Car Maintenance", Colors.grey),
+    TaskItem("Plan Vacation", Colors.grey),
+  ];
   static final List<TaskItem> studyTasks = [
     TaskItem("Math Homework", Color(0xFF283c64)),
     TaskItem("Read History Chapter", Color(0xFF283c64)),

@@ -11,6 +11,7 @@ import 'package:srs_app/pages/WakeUpPage.dart';
 import 'package:srs_app/pages/ChangePass.dart';
 import 'package:srs_app/pages/pomodoro.dart';
 import 'package:srs_app/pages/Startpage.dart';
+import 'package:srs_app/pages/FirstPage_Stress.dart';
 import 'dart:io';
 void main() { 
  HttpOverrides.global = MyHttpOverrides();
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
-
-       home: Login(),
+       home: Startpage(),
+       //home: Login(),
        //home: Profilepage(),
 
       //home: ChangePass(),
@@ -49,8 +50,10 @@ class MyApp extends StatelessWidget {
         '/sleep': (context) => const SleepPage(),
         '/wakeup': (context) => const Wakeuppage(),
         '/changepass': (context) => const ChangePass(),
-        '/insights': (context) => const insights(),
+        '/insights': (context) => const Insights(),
         '/taskspage':(context)=>TasksPage(),
+        '/recommendations':(context)=>RecommendationsPage(),
+        '/stresspage':(context)=>SocialActivityPage(),
       },
       
     );
