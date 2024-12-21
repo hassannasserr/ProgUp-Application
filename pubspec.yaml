@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter 
   http: ^1.1.0
-
   intl: ^0.17.0
   
 
@@ -71,6 +70,9 @@ flutter:
       - family: AbhayaLibre
         fonts:
           - asset: assets/fonts/AbhayaLibre-ExtraBold.ttf
+      - family: Poetsen
+        fonts:
+          - asset: assets/fonts/Poetsen_One/PoetsenOne-Regular.ttf
 
     
 
