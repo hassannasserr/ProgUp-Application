@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ChangePass extends StatelessWidget {
-  const ChangePass({Key? key}) : super(key: key);
+  const ChangePass({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,9 @@ class ChangePass extends StatelessWidget {
               children: [
                 Container(
                   height: 130,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF384454),
-                    borderRadius: const BorderRadius.only(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF384454),
+                    borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
                       bottomRight: Radius.circular(30),
                     ),
@@ -41,12 +41,12 @@ class ChangePass extends StatelessWidget {
                         height: 60,
                       ),
                       const SizedBox(height: 5),
-                      Align(
+                      const Align(
                         alignment: Alignment.center,
                         child: Stack(
                           alignment: Alignment.bottomRight,
                           children: [
-                            const CircleAvatar(
+                            CircleAvatar(
                               radius: 70,
                               backgroundImage:
                               AssetImage('assets/images/profile.jpg'),
@@ -54,7 +54,7 @@ class ChangePass extends StatelessWidget {
                             CircleAvatar(
                               radius: 16,
                               backgroundColor: Colors.orange,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.edit,
                                 color: Colors.white,
                                 size: 16,
@@ -76,8 +76,8 @@ class ChangePass extends StatelessWidget {
                 color: const Color(0xFF384454),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   SizedBox(height: 10),
                   TransparentField(label: 'Current password'),
                   SizedBox(height: 20),
@@ -100,7 +100,7 @@ class ChangePass extends StatelessWidget {
 class TransparentField extends StatelessWidget {
   final String label;
 
-  const TransparentField({Key? key, required this.label}) : super(key: key);
+  const TransparentField({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +123,7 @@ class TransparentField extends StatelessWidget {
 }
 
 class ChangeButton extends StatelessWidget {
-  const ChangeButton({Key? key}) : super(key: key);
+  const ChangeButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class ChangeButton extends StatelessWidget {
 }
 
 class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  const BottomNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -161,9 +161,9 @@ class BottomNavBar extends StatelessWidget {
           color: const Color(0xFF384454),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
+          children: [
             BottomNavItem(icon: Icons.home_outlined, label: 'Home'),
             BottomNavItem(icon: Icons.task_outlined, label: 'Tasks'),
             BottomNavItem(icon: Icons.access_time_outlined, label: 'Pomo'),
@@ -182,11 +182,11 @@ class BottomNavItem extends StatelessWidget {
   final bool isActive;
 
   const BottomNavItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.isActive = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

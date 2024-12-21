@@ -6,26 +6,26 @@ class Startpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Color(0xFF24282e),
+      backgroundColor:const Color(0xFF24282e),
       body: Column(
         children: [
-          SizedBox(height: 300),
+          const SizedBox(height: 300),
           Center(
             child: Image.asset('assets/images/logo.jpg'),
           ),
-          SizedBox(height: 250),
+          const SizedBox(height: 250),
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, '/login');
             },
             style: ElevatedButton.styleFrom(
-             backgroundColor: Color(0xFF49B583),
-             minimumSize: Size(230, 56),
-             padding: EdgeInsets.symmetric(horizontal: 50),
+             backgroundColor: const Color(0xFF49B583),
+             minimumSize: const Size(230, 56),
+             padding: const EdgeInsets.symmetric(horizontal: 50),
              
             ),
             
-            child: Text('Start', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text('Start', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

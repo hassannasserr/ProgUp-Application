@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
+
 class TasksPage extends StatelessWidget {
   @override
   final List<String> tasks = [
@@ -14,6 +15,9 @@ class TasksPage extends StatelessWidget {
     "Task 8",
     "Task 9",
   ];
+
+  TasksPage({super.key});
+  @override
   Widget build(BuildContext context) {
     // الحصول على التاريخ الحالي
     String currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
@@ -29,52 +33,54 @@ class TasksPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // التاريخ وكلمة "Today" على اليسار
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentDate,
-                          style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // التاريخ وكلمة "Today" على اليسار
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            currentDate,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Today',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      // زر "Add Task" على اليمين
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          // أضف وظيفة عند الضغط على الزر
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const AddTaskDialog();
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.add, color: Colors.white),
+                        label: const Text(
+                          'Add Task',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Today',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green, // لون الزر الأخضر
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // حواف دائرية
                           ),
                         ),
-                      ],
-                    ),
-                    // زر "Add Task" على اليمين
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // أضف وظيفة عند الضغط على الزر
-                        showDialog(
-                       context: context,
-                       builder: (BuildContext context) {
-                        return AddTaskDialog();
-                       },
-                      );
-                      },
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      label: const Text(
-                        'Add Task',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green, // لون الزر الأخضر
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // حواف دائرية
-                        ),
-                      ),
-                    ),
-                  ],
-                          ),
+                    ],
+                  ),
                 ),
                 // شريط الأيام
                 Padding(
@@ -83,17 +89,28 @@ class TasksPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List.generate(
                       7,
-                          (index) => Column(
+                      (index) => Column(
                         children: [
                           Text(
-                            ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][index],
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                            [
+                              'Mon',
+                              'Tue',
+                              'Wed',
+                              'Thu',
+                              'Fri',
+                              'Sat',
+                              'Sun'
+                            ][index],
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
                           ),
                           const SizedBox(height: 5),
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: index == 3 ? Colors.green : Colors.transparent,
+                              color: index == 3
+                                  ? Colors.green
+                                  : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                             child: Text(
@@ -111,38 +128,59 @@ class TasksPage extends StatelessWidget {
                 ),
                 // قائمة المهام
                 ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      Color containerColor;
-                      if (index % 3 == 0) {
-                    containerColor = Color(0xFF283c64);
-                    } else if (index % 3 == 1) {
-                    containerColor = Color(0xFF386454);
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: TaskData.studyTasks.length +
+                      TaskData.socialTasks.length +
+                      TaskData.physicalTasks.length +
+                      TaskData.otherTasks.length,
+                  itemBuilder: (context, index) {
+                    late TaskItem task;
+                    if (index < TaskData.studyTasks.length) {
+                      task = TaskData.studyTasks[index];
+                    } else if (index <
+                        TaskData.studyTasks.length +
+                            TaskData.socialTasks.length) {
+                      task = TaskData
+                          .socialTasks[index - TaskData.studyTasks.length];
+                    } else if (index <
+                        TaskData.studyTasks.length +
+                            TaskData.socialTasks.length +
+                            TaskData.physicalTasks.length) {
+                      task = TaskData.physicalTasks[index -
+                          TaskData.studyTasks.length -
+                          TaskData.socialTasks.length];
                     } else {
-                     containerColor = Color(0xFF702c54);
+                      task = TaskData.otherTasks[index -
+                          TaskData.studyTasks.length -
+                          TaskData.socialTasks.length -
+                          TaskData.physicalTasks.length];
                     }
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: TaskContainer(
-                      taskName: tasks[index],
-                      color: containerColor,
-                    ), // TaskContainer
-                      );
-                    },
-                  ),
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: TaskContainer(
+                        taskName: task.name,
+                        color: task.color,
+                      ),
+                    );
+                  },
+                )
+
                 // شريط التنقل السفلي
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
+
 class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Bottom Navigation Bar
@@ -150,19 +188,20 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 60,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFF384454),
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(20),
             right: Radius.circular(20),
           ),
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             BottomNavItem(icon: Icons.home_outlined, label: 'Home'),
-            BottomNavItem(icon: Icons.task_outlined, label: 'Tasks', isActive: true),
-            BottomNavItem(icon: Icons.access_time_outlined, label: 'Promo'),
+            BottomNavItem(
+                icon: Icons.task_outlined, label: 'Tasks', isActive: true),
+            BottomNavItem(icon: Icons.access_time_outlined, label: 'Pomo'),
             BottomNavItem(icon: Icons.menu_book_outlined, label: 'Log'),
             BottomNavItem(icon: Icons.person_outline, label: 'Me'),
           ],
@@ -171,17 +210,18 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 }
+
 class BottomNavItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool isActive;
 
   const BottomNavItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.isActive = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -196,11 +236,11 @@ class BottomNavItem extends StatelessWidget {
             } else if (label == 'Tasks') {
               Navigator.pushNamed(context, '/taskspage');
               print("Tasks");
-            } else if (label == 'Promo') {
-             // Navigator.pushNamed(context, '');
-             print("Promo");
+            } else if (label == 'Pomo') {
+              Navigator.pushNamed(context, '/pomo');
+              print("Promo");
             } else if (label == 'Log') {
-              //Navigator.pushNamed(context, '/log');
+              Navigator.pushNamed(context, '/insights');
               print("Log");
             } else if (label == 'Me') {
               Navigator.pushNamed(context, '/profile');
@@ -221,6 +261,8 @@ class BottomNavItem extends StatelessWidget {
 }
 
 class AddTaskDialog extends StatefulWidget {
+  const AddTaskDialog({super.key});
+
   @override
   _AddTaskDialogState createState() => _AddTaskDialogState();
 }
@@ -239,8 +281,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8, // Set the width to 80% of the screen width
-        padding: EdgeInsets.all(16.0),
+        width: MediaQuery.of(context).size.width *
+            0.8, // Set the width to 80% of the screen width
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: const Color(0xFF384454),
           borderRadius: BorderRadius.circular(10.0),
@@ -248,23 +291,32 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Add Task', style: TextStyle(color: Colors.white, fontSize: 20)),
-            SizedBox(height: 16.0),
+            const Text('Add Task',
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+            const SizedBox(height: 16.0),
             Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    style: TextStyle(color: Colors.white), // Set the input text color to white
-                    decoration: InputDecoration(
+                    style: const TextStyle(
+                        color:
+                            Colors.white), // Set the input text color to white
+                    decoration: const InputDecoration(
                       labelText: 'Task Name',
-                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      labelStyle: TextStyle(
+                          color: Colors
+                              .white), // Set the label text color to white
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white when focused
                       ),
                     ),
                     onSaved: (value) {
@@ -281,22 +333,30 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     value: taskType.isEmpty ? null : taskType,
                     borderRadius: BorderRadius.circular(20.0),
                     //change the color of the dropdown menu border
-                    
+
                     items: taskTypes.map((String type) {
                       return DropdownMenuItem<String>(
                         value: type,
-                        child: Text(type, style: TextStyle(color: Colors.white)),
+                        child: Text(type,
+                            style: const TextStyle(color: Colors.white)),
                       );
                     }).toList(),
-                    dropdownColor: Color(0xFF384454), // Set the background color of the dropdown menu
-                    decoration: InputDecoration(
+                    dropdownColor: const Color(
+                        0xFF384454), // Set the background color of the dropdown menu
+                    decoration: const InputDecoration(
                       labelText: 'Task Type',
-                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      labelStyle: TextStyle(
+                          color: Colors
+                              .white), // Set the label text color to white
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white when focused
                       ),
                     ),
                     onChanged: (value) {
@@ -312,15 +372,23 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     },
                   ),
                   TextFormField(
-                    style: TextStyle(color: Colors.white), // Set the input text color to white
-                    decoration: InputDecoration(
+                    style: const TextStyle(
+                        color:
+                            Colors.white), // Set the input text color to white
+                    decoration: const InputDecoration(
                       labelText: 'Task Details',
-                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      labelStyle: TextStyle(
+                          color: Colors
+                              .white), // Set the label text color to white
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white when focused
                       ),
                     ),
                     onSaved: (value) {
@@ -334,26 +402,34 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     },
                   ),
                   TextFormField(
-                    style: TextStyle(color: Colors.white), // Set the input text color to white
-                    decoration: InputDecoration(
+                    style: const TextStyle(
+                        color:
+                            Colors.white), // Set the input text color to white
+                    decoration: const InputDecoration(
                       labelText: 'Task Deadline',
-                      labelStyle: TextStyle(color: Colors.white), // Set the label text color to white
+                      labelStyle: TextStyle(
+                          color: Colors
+                              .white), // Set the label text color to white
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white), // Set the underline color to white when focused
+                        borderSide: BorderSide(
+                            color: Colors
+                                .white), // Set the underline color to white when focused
                       ),
                     ),
                     onTap: () async {
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                      FocusScope.of(context).requestFocus(FocusNode());
                       DateTime? picked = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2101),
                       );
-                      if (picked != null && picked != taskDeadline) {
+                      if (picked != taskDeadline) {
                         setState(() {
                           taskDeadline = picked;
                         });
@@ -375,7 +451,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 ],
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -383,7 +459,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                  child: const Text('Cancel',
+                      style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -393,7 +470,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: Text('Add Task'),
+                  child: const Text('Add Task'),
                 ),
               ],
             ),

@@ -3,29 +3,27 @@ import 'package:flutter/material.dart';
 class TaskContainer extends StatelessWidget {
   final String taskName;
   final Color color;
-  // Constructor to accept the task name
+
   const TaskContainer({
-    Key? key,
+    super.key,
     required this.taskName,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery for responsive design
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      width: screenWidth, // Automatically adjusts to parent width
+      width: screenWidth,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: color, // Navy blue color
-        borderRadius: BorderRadius.circular(20), // Rounded corners
+        color: color,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Task Title
           Expanded(
             child: Text(
               taskName,
@@ -34,13 +32,11 @@ class TaskContainer extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
-              overflow: TextOverflow.ellipsis, // Handles long task names
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          // Icons Row
           Row(
             children: [
-              // Delete Icon
               IconButton(
                 onPressed: () {
                   print('Delete $taskName');
@@ -50,7 +46,6 @@ class TaskContainer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              // Circular Checkbox
               IconButton(
                 onPressed: () {
                   print('Done $taskName');
@@ -61,7 +56,6 @@ class TaskContainer extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              // Dropdown Arrow
               const Icon(
                 Icons.arrow_drop_down,
                 color: Colors.white,
@@ -70,6 +64,59 @@ class TaskContainer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TaskData {
+  static final List<TaskItem> studyTasks = [
+    TaskItem("Math Homework", Color(0xFF283c64)),
+    TaskItem("Read History Chapter", Color(0xFF283c64)),
+    TaskItem("Write Essay", Color(0xFF283c64)),
+  ];
+
+  static final List<TaskItem> socialTasks = [
+    TaskItem("Call John", Color(0xFF386454)),
+    TaskItem("Birthday Party", Color(0xFF386454)),
+    TaskItem("Volunteer Work", Color(0xFF386454)),
+  ];
+
+  static final List<TaskItem> physicalTasks = [
+    TaskItem("Morning Jog", Color(0xFF702c54)),
+    TaskItem("Yoga Class", Color(0xFF702c54)),
+    TaskItem("Gym Workout", Color(0xFF702c54)),
+  ];
+
+  static final List<TaskItem> otherTasks = [
+    TaskItem("Grocery Shopping", Colors.grey),
+    TaskItem("Car Maintenance", Colors.grey),
+    TaskItem("Plan Vacation", Colors.grey),
+  ];
+}
+
+class TaskItem {
+  final String name;
+  final Color color;
+
+  TaskItem(this.name, this.color);
+}
+
+class TaskListView extends StatelessWidget {
+  final List<TaskItem> tasks;
+
+  const TaskListView({super.key, required this.tasks});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: TaskContainer(taskName: task.name, color: task.color),
+        );
+      },
     );
   }
 }

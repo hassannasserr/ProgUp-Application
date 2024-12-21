@@ -5,7 +5,7 @@ class Profilepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF24282e),
+      backgroundColor: const Color(0xFF24282e),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,11 +23,11 @@ class Profilepage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   //  name and picture
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 30),
+                        padding: EdgeInsets.only(left: 30),
                         // name
                         child: Text(
                           'SharShora Elamora',
@@ -41,7 +41,7 @@ class Profilepage extends StatelessWidget {
                       ),
                       // profile picture
                       Padding(
-                        padding: const EdgeInsets.only(right: 20),
+                        padding: EdgeInsets.only(right: 20),
                         child: Stack(
                           children: [
                             CircleAvatar(
@@ -76,21 +76,21 @@ class Profilepage extends StatelessWidget {
               child: Column(
                 children: [
                   //email field
-                  ProfileField(
+                  const ProfileField(
                     icon: Icons.email_outlined,
                     hint: 'sherryezz04@gamil',
                     label: 'Your Email',
                     inputType: TextInputType.emailAddress,
                   ),
                   //phone number field
-                  ProfileField(
+                  const ProfileField(
                     icon: Icons.phone_outlined,
                     hint: '01229933092',
                     label: 'Phone Number',
                     inputType: TextInputType.phone,
                   ),
                   //password field
-                  ProfileField(
+                  const ProfileField(
                     icon: Icons.lock_outline,
                     hint: '••••••••',
                     label: 'Password',
@@ -108,14 +108,14 @@ class Profilepage extends StatelessWidget {
 
                           },
                           style: OutlinedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 50),
+                            minimumSize: const Size(double.infinity, 50),
                             backgroundColor: Colors.transparent,
-                            side: BorderSide(color: Colors.green),
+                            side: const BorderSide(color: Colors.green),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Change Password',
                             style: TextStyle(
                               fontSize: 16,
@@ -128,13 +128,13 @@ class Profilepage extends StatelessWidget {
                           onPressed: () {
                           },
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.red),
-                            minimumSize: Size(double.infinity, 50),
+                            side: const BorderSide(color: Colors.red),
+                            minimumSize: const Size(double.infinity, 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Logout',
                             style: TextStyle(
                               fontSize: 16,
@@ -152,7 +152,7 @@ class Profilepage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
@@ -165,20 +165,20 @@ class ProfileField extends StatefulWidget {
   final TextInputType inputType;
 
   const ProfileField({
-    Key? key,
+    super.key,
     required this.icon,
     required this.hint,
     required this.label,
     this.isPassword = false,
     this.inputType = TextInputType.text,
-  }) : super(key: key);
+  });
 
   @override
   _ProfileFieldState createState() => _ProfileFieldState();
 }
 
 class _ProfileFieldState extends State<ProfileField> {
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
   bool _isObscured = true;
 
@@ -227,7 +227,7 @@ class _ProfileFieldState extends State<ProfileField> {
             color: _isFocused ? Colors.green : Colors.white70,
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green),
+            borderSide: const BorderSide(color: Colors.green),
             borderRadius: BorderRadius.circular(12),
           ),
           border: OutlineInputBorder(
@@ -240,6 +240,8 @@ class _ProfileFieldState extends State<ProfileField> {
 }
 
 class BottomNavBar extends StatelessWidget {
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Bottom Navigation Bar
@@ -247,19 +249,19 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 60,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFF384454),
           borderRadius: BorderRadius.horizontal(
             left: Radius.circular(20),
             right: Radius.circular(20),
           ),
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             BottomNavItem(icon: Icons.home_outlined, label: 'Home'),
             BottomNavItem(icon: Icons.task_outlined, label: 'Tasks'),
-            BottomNavItem(icon: Icons.access_time_outlined, label: 'Promo'),
+            BottomNavItem(icon: Icons.access_time_outlined, label: 'Pomo'),
             BottomNavItem(icon: Icons.menu_book_outlined, label: 'Log'),
             BottomNavItem(icon: Icons.person_outline, label: 'Me', isActive: true),
           ],
@@ -275,11 +277,11 @@ class BottomNavItem extends StatelessWidget {
   final bool isActive;
 
   const BottomNavItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.isActive = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -291,11 +293,11 @@ class BottomNavItem extends StatelessWidget {
             } else if (label == 'Tasks') {
               Navigator.pushNamed(context, '/taskspage');
               print("Tasks");
-            } else if (label == 'Promo') {
-             // Navigator.pushNamed(context, '');
+            } else if (label == 'Pomo') {
+              Navigator.pushNamed(context, '/pomo');
              print("Promo");
             } else if (label == 'Log') {
-              //Navigator.pushNamed(context, '/log');
+              Navigator.pushNamed(context, '/insights');
               print("Log");
             } else if (label == 'Me') {
               Navigator.pushNamed(context, '/profile');
