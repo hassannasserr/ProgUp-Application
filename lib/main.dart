@@ -38,13 +38,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
 
-      // home: TasksPage(),
+      //home: TasksPage(),
 
-      home: Startpage(),
 
        //home: Homepage(),
-       //home: Login(),
-      home: Profilepage(),
+       home: Login(),
+       //home: Profilepage(),
       //home: ChangePass(),
       routes: {
         '/login': (context) => Login(),

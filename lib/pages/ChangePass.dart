@@ -7,7 +7,6 @@ class ChangePass extends StatefulWidget {
 
   State<ChangePass> createState() => _ChangePassState();
 
-  _ChangePassState createState() => _ChangePassState();
 
 }
 

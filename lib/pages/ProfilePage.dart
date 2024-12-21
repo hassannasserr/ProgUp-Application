@@ -6,7 +6,6 @@ class Profilepage extends StatefulWidget {
   @override
   State<Profilepage> createState() => _ProfilepageState();
 
-  _ProfilepageState createState() => _ProfilepageState();
 
 }
 

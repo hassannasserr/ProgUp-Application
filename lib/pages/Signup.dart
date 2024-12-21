@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
-import '../api_service.dart'; // Update this import path
+import '../api_service.dart'; // Ensure this path is correct
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
 
   @override
-  State<Signup> createState() => _MyWidgetState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _MyWidgetState extends State<Signup> {
-  // Add controllers
+class _SignupState extends State<Signup> {
+  // Controllers for text fields
   final TextEditingController fnameController = TextEditingController();
   final TextEditingController lnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   
-  // Add API service
+  // API service instance
   final ApiService api = ApiService();
   
-  // Add loading state
+  // Loading state for the button
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF24282e),
+      backgroundColor: const Color(0xFF24282e),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Header section with logo and title
             Container(
               height: 400,
               width: double.infinity,
-              color: Color(0xFF384454),
+              color: const Color(0xFF384454),
               child: Column(
                 children: [
                   Padding(
@@ -50,7 +51,7 @@ class _MyWidgetState extends State<Signup> {
                         alignment: Alignment.center,
                         children: [
                           CustomPaint(
-                            size: Size(400, 100),
+                            size: const Size(400, 100),
                             painter: TrianglePainter(),
                           ),
                           const Text(
@@ -68,16 +69,18 @@ class _MyWidgetState extends State<Signup> {
                 ],
               ),
             ),
+            // Signup form fields
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  // First and last name fields
                   Row(
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: fnameController, // Add controller
-                          decoration: InputDecoration(
+                          controller: fnameController,
+                          decoration: const InputDecoration(
                             labelText: 'First Name',
                             labelStyle: TextStyle(color: Colors.white),
                             enabledBorder: UnderlineInputBorder(
@@ -87,14 +90,14 @@ class _MyWidgetState extends State<Signup> {
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: TextField(
-                          controller: lnameController, // Add controller
-                          decoration: InputDecoration(
+                          controller: lnameController,
+                          decoration: const InputDecoration(
                             labelText: 'Last Name',
                             labelStyle: TextStyle(color: Colors.white),
                             enabledBorder: UnderlineInputBorder(
@@ -104,14 +107,15 @@ class _MyWidgetState extends State<Signup> {
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
                   ),
+                  // Email field
                   TextField(
-                    controller: emailController, // Add controller
-                    decoration: InputDecoration(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
@@ -121,12 +125,13 @@ class _MyWidgetState extends State<Signup> {
                         borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
+                  // Password fields
                   TextField(
-                    controller: passwordController, // Add controller
-                    decoration: InputDecoration(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
@@ -137,12 +142,12 @@ class _MyWidgetState extends State<Signup> {
                       ),
                     ),
                     obscureText: true,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
-                    controller: confirmPasswordController, // Add controller
-                    decoration: InputDecoration(
+                    controller: confirmPasswordController,
+                    decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
@@ -153,22 +158,24 @@ class _MyWidgetState extends State<Signup> {
                       ),
                     ),
                     obscureText: true,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               ),
             ),
+            // 'Join now' button with loading indicator
             isLoading 
-              ? CircularProgressIndicator(color: Colors.white)
+              ? const CircularProgressIndicator(color: Colors.white)
               : ElevatedButton(
                   onPressed: () async {
                     // Basic validation
                     if (fnameController.text.isEmpty || 
                         lnameController.text.isEmpty || 
                         emailController.text.isEmpty || 
-                        passwordController.text.isEmpty) {
+                        passwordController.text.isEmpty ||
+                        confirmPasswordController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill all fields')),
+                        const SnackBar(content: Text('Please fill all fields')),
                       );
                       return;
                     }
@@ -176,51 +183,55 @@ class _MyWidgetState extends State<Signup> {
                     // Password match validation
                     if (passwordController.text != confirmPasswordController.text) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Passwords do not match!')),
+                        const SnackBar(content: Text('Passwords do not match!')),
                       );
                       return;
                     }
 
-                    // Show loading
+                    // Show loading indicator
                     setState(() => isLoading = true);
 
                     try {
                       // Try to register user
-                      bool success = await api.registerUser(
+                      Map<String, dynamic> result = await api.registerUser(
                         fnameController.text,
                         lnameController.text,
                         emailController.text,
                         passwordController.text,
                       );
 
-                      if (success) {
+                      if (result['success']) {
+                        // Registration successful
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Registration successful!')),
+                          SnackBar(content: Text(result['message'] ?? 'Registration successful!')),
                         );
-                        Navigator.pushNamed(context, '/login');
+                        // Navigate to login page
+                        Navigator.pushReplacementNamed(context, '/login');
                       } else {
+                        // Registration failed
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Registration failed. Please try again.')),
+                          SnackBar(content: Text(result['message'] ?? 'Registration failed. Please try again.')),
                         );
                       }
                     } catch (e) {
+                      // Handle any errors
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('An error occurred. Please try again.')),
+                        const SnackBar(content: Text('An error occurred. Please try again.')),
                       );
                     } finally {
-                      // Hide loading
+                      // Hide loading indicator
                       setState(() => isLoading = false);
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF384454),
-                    minimumSize: Size(390, 41),
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(
+                    backgroundColor: const Color(0xFF384454),
+                    minimumSize: const Size(390, 41),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Join now',
                     style: TextStyle(
                       fontSize: 20,
@@ -229,18 +240,19 @@ class _MyWidgetState extends State<Signup> {
                     ),
                   ),
                 ),
+            // Link to login page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'have an account? ',
+                const Text(
+                  'Have an account? ',
                   style: TextStyle(color: Colors.white),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/login');
                   },
-                  child: Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(
                       color: Colors.white,
@@ -261,7 +273,7 @@ class TrianglePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFF24282e)
+      ..color = const Color(0xFF24282e)
       ..style = PaintingStyle.fill;
 
     final path = Path();
