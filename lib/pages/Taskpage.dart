@@ -276,8 +276,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   String taskType = '';
   String taskDetails = '';
   DateTime? taskDeadline;
+  int? taskPriority;
 
-  final List<String> taskTypes = ['Study', 'Project', 'Assignment', 'Others'];
+  final List<String> taskTypes = ['Study', 'Social', 'Physical', 'Others'];
 
   @override
   Widget build(BuildContext context) {
@@ -451,6 +452,41 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                       return null;
                     },
                   ),
+                  // ...existing code...
+                DropdownButtonFormField<int>(
+                  decoration: const InputDecoration(
+                    labelText: 'Task Priority',
+                    labelStyle: TextStyle(color: Colors.white),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  value: taskPriority,
+                  items: List.generate(5, (index) => index + 1)
+                      .map((priority) => DropdownMenuItem(
+                            value: priority,
+                            child: Text(
+                              priority.toString(),
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      taskPriority = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please choose a priority';
+                    }
+                    return null;
+                  },
+                ),
+// ...existing code...
                 ],
               ),
             ),
@@ -476,6 +512,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                         taskDetails,
                         taskDeadline!.toIso8601String(),
                         taskType,
+                        taskPriority!,
                       );
 
                       if (response['success']) {

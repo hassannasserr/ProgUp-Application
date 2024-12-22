@@ -11,7 +11,6 @@ class SleepPage extends StatefulWidget {
 class _SleepTimePageState extends State<SleepPage> {
   int selectedHour = 6;
   int selectedMinute = 0;
-  int selectedSecond = 0;
   String selectedPeriod = "PM";
 
   @override
@@ -130,32 +129,6 @@ class _SleepTimePageState extends State<SleepPage> {
                     width: 50,
                     child: CupertinoPicker(
                       itemExtent: 50,
-                      scrollController:
-                          FixedExtentScrollController(initialItem: 0),
-                      onSelectedItemChanged: (index) {
-                        setState(() {
-                          selectedSecond = index;
-                        });
-                      },
-                      children: List.generate(
-                        60,
-                        (index) => Center(
-                          child: Text(
-                            index.toString().padLeft(2, '0'),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 50,
-                    child: CupertinoPicker(
-                      itemExtent: 50,
                       scrollController: FixedExtentScrollController(
                           initialItem: selectedPeriod == "AM" ? 0 : 1),
                       onSelectedItemChanged: (index) {
@@ -208,7 +181,6 @@ class _SleepTimePageState extends State<SleepPage> {
                     setState(() {
                       selectedHour = 6;
                       selectedMinute = 0;
-                      selectedSecond = 0;
                       selectedPeriod = "AM";
                     });
                   },
@@ -232,8 +204,16 @@ class _SleepTimePageState extends State<SleepPage> {
                   ),
                   onPressed: () {
                     print(
-                        "Selected Time: $selectedHour:${selectedMinute.toString().padLeft(2, '0')}:${selectedSecond.toString().padLeft(2, '0')} $selectedPeriod");
-                        Navigator.pushNamed(context, '/wakeup');
+                        "Selected Time: $selectedHour:${selectedMinute.toString().padLeft(2, '0')}:$selectedPeriod");
+                      Navigator.pushNamed(
+                      context,
+                      '/wakeup',
+                      arguments: {
+                        'sleepHour': selectedHour,
+                        'sleepMinute': selectedMinute,
+                        'sleepPeriod': selectedPeriod,
+                      },
+                    );
                   },
                   child: const Text(
                     "Save",
