@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:srs_app/api_service.dart';
 
 
 class SocialActivityPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class SocialActivityPage extends StatefulWidget {
 class _SocialActivityPageState extends State<SocialActivityPage> {
   int socialHours = 0;
   String stressLevel = "Low";
-
+  final ApiService api = ApiService();
   @override
   Widget build(BuildContext context) {
       final Map<String, dynamic> args =
@@ -24,6 +24,11 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
     final int wakeUpHour = args['wakeUpHour'];
     final int wakeUpMinute = args['wakeUpMinute'];
     final String wakeUpPeriod = args['wakeUpPeriod'];
+        String formatTime(int hour, int minute, String period) {
+      return '$hour:${minute.toString().padLeft(2, '0')} $period';
+    }
+    String asleepTime = formatTime(sleepHour, sleepMinute, sleepPeriod);
+    String awakeTime = formatTime(wakeUpHour, wakeUpMinute, wakeUpPeriod);
     return Scaffold(
       backgroundColor: const Color(0xFF24282e),
       body: SafeArea(
@@ -122,7 +127,7 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
                 ),
                 isExpanded: true,
                 style: const TextStyle(color: Colors.white),
-                items: ["Low", "Medium", "High"].map((String value) {
+                items: ["Low", "Moderate", "High"].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -144,10 +149,17 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 print("Social Hours: $socialHours, Stress Level: $stressLevel");
-                
-                Navigator.pushNamed(context, '/homepage');
+
+                final result = await api.addActivity(asleepTime, awakeTime, stressLevel, socialHours.toString());
+
+                if (result['success']) {
+                  Navigator.pushNamed(context, '/homepage');
+                } else {
+                  // Handle error (e.g., show a dialog with the error message)
+                  print(result['message']);
+                }
               },
               child: const Text(
                 "Start Scheduling",
