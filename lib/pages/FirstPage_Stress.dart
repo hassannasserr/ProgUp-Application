@@ -14,6 +14,16 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
 
   @override
   Widget build(BuildContext context) {
+      final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    final int sleepHour = args['sleepHour'];
+    final int sleepMinute = args['sleepMinute'];
+    final String sleepPeriod = args['sleepPeriod'];
+
+    final int wakeUpHour = args['wakeUpHour'];
+    final int wakeUpMinute = args['wakeUpMinute'];
+    final String wakeUpPeriod = args['wakeUpPeriod'];
     return Scaffold(
       backgroundColor: const Color(0xFF24282e),
       body: SafeArea(
@@ -136,6 +146,7 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
               ),
               onPressed: () {
                 print("Social Hours: $socialHours, Stress Level: $stressLevel");
+                
                 Navigator.pushNamed(context, '/homepage');
               },
               child: const Text(

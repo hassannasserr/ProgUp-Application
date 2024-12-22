@@ -5,17 +5,18 @@ class Wakeuppage extends StatefulWidget {
   const Wakeuppage({super.key});
 
   @override
-  State<Wakeuppage> createState() => _SleepTimePageState();
+  State<Wakeuppage> createState() => _WakeupTimePageState();
 }
 
-class _SleepTimePageState extends State<Wakeuppage> {
+class _WakeupTimePageState extends State<Wakeuppage> {
   int selectedHour = 6;
   int selectedMinute = 0;
-  int selectedSecond = 0;
   String selectedPeriod = "PM";
 
   @override
   Widget build(BuildContext context) {
+        final Map<String, dynamic> sleepData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
       backgroundColor: const Color(0xFF24282e),
       body: SafeArea(
@@ -125,32 +126,7 @@ class _SleepTimePageState extends State<Wakeuppage> {
                     ":",
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
-                  SizedBox(
-                    width: 50,
-                    child: CupertinoPicker(
-                      itemExtent: 50,
-                      scrollController:
-                          FixedExtentScrollController(initialItem: 0),
-                      onSelectedItemChanged: (index) {
-                        setState(() {
-                          selectedSecond = index;
-                        });
-                      },
-                      children: List.generate(
-                        60,
-                        (index) => Center(
-                          child: Text(
-                            index.toString().padLeft(2, '0'),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                 
                   SizedBox(
                     width: 50,
                     child: CupertinoPicker(
@@ -207,7 +183,6 @@ class _SleepTimePageState extends State<Wakeuppage> {
                     setState(() {
                       selectedHour = 6;
                       selectedMinute = 0;
-                      selectedSecond = 0;
                       selectedPeriod = "AM";
                     });
                   },
@@ -231,8 +206,19 @@ class _SleepTimePageState extends State<Wakeuppage> {
                   ),
                   onPressed: () {
                     print(
-                        "Selected Time: $selectedHour:${selectedMinute.toString().padLeft(2, '0')}:${selectedSecond.toString().padLeft(2, '0')} $selectedPeriod");
-                        Navigator.pushNamed(context, '/stresspage');
+                        "Selected Time: $selectedHour:${selectedMinute.toString().padLeft(2, '0')}:$selectedPeriod");
+                        Navigator.pushNamed(
+                      context,
+                      '/stresspage',
+                      arguments: {
+                        'sleepHour': sleepData['sleepHour'],
+                        'sleepMinute': sleepData['sleepMinute'],
+                        'sleepPeriod': sleepData['sleepPeriod'],
+                        'wakeUpHour': selectedHour,
+                        'wakeUpMinute': selectedMinute,
+                        'wakeUpPeriod': selectedPeriod,
+                      },
+                    );
                   },
                   child: const Text(
                     "Save",
