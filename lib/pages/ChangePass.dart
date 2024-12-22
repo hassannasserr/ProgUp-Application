@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:srs_app/api_service.dart';
 
 
 class ChangePass extends StatefulWidget {
@@ -12,6 +13,9 @@ class ChangePass extends StatefulWidget {
 }
 
 class _ChangePassState extends State<ChangePass> {
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,16 +89,20 @@ class _ChangePassState extends State<ChangePass> {
                 color: const Color(0xFF384454),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: const Column(
+              child: Column(
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TransparentField(label: 'Current password'),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TransparentField(label: 'New Password'),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TransparentField(label: 'Confirm new password'),
-                  SizedBox(height: 30),
-                  ChangeButton(),
+                  const SizedBox(height: 30),
+                  ChangeButton(
+                    currentPasswordController: currentPasswordController,
+                    newPasswordController: newPasswordController,
+                    confirmNewPasswordController: confirmNewPasswordController,
+                  ),
                 ],
               ),
             ),
@@ -109,11 +117,23 @@ class _ChangePassState extends State<ChangePass> {
 class TransparentField extends StatelessWidget {
   final String label;
 
-  const TransparentField({super.key, required this.label});
-
+ TransparentField({super.key, required this.label});
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    TextEditingController? controller;
+    if (label == 'Current password') {
+      controller = currentPasswordController;
+    } else if (label == 'New Password') {
+      controller = newPasswordController;
+    } else if (label == 'Confirm new password') {
+      controller = confirmNewPasswordController;
+    }
+
     return TextField(
+      controller: controller,
       style: const TextStyle(color: Colors.white),
       cursorColor: Colors.green,
       obscureText: label.toLowerCase().contains('password'),
@@ -132,12 +152,35 @@ class TransparentField extends StatelessWidget {
 }
 
 class ChangeButton extends StatelessWidget {
-  const ChangeButton({super.key});
+     final TextEditingController currentPasswordController;
+  final TextEditingController newPasswordController;
+  final TextEditingController confirmNewPasswordController;
 
+  ChangeButton({
+    super.key,
+    required this.currentPasswordController,
+    required this.newPasswordController,
+    required this.confirmNewPasswordController,
+  });
+  final ApiService apiService = ApiService();
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        final currentPassword = currentPasswordController.text;
+        final newPassword = newPasswordController.text;
+        final confirmNewPassword = confirmNewPasswordController.text;
+
+        final result = await apiService.changePassword(currentPassword, newPassword, confirmNewPassword);
+
+        if (result['success']) {
+          // Handle success (e.g., show a success message or navigate to another page)
+          print(result['message']);
+        } else {
+          // Handle error (e.g., show an error message)
+          print(result['message']);
+        }
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
         minimumSize: const Size(double.infinity, 50),
