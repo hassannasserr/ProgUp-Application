@@ -324,8 +324,79 @@ Future<Map<String, dynamic>> addTask(
     }
   }
   // New method to add an activity
-  Future<Map<String, dynamic>> addActivity(
-      String asleepTime, String awakeTime, String stressLevel) async {
+  // Method to add an activity (modified to include socialHours)
+Future<Map<String, dynamic>> addActivity(
+    String asleepTime, String awakeTime, String stressLevel, String socialHours) async {
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
+      return {
+        'success': false,
+        'message': 'User not authenticated.',
+      };
+    }
+
+    // Validate stress level
+    if (!['low', 'moderate', 'high'].contains(stressLevel.toLowerCase())) {
+      return {
+        'success': false,
+        'message': 'Invalid stress level. Must be one of: low, moderate, high.',
+      };
+    }
+
+    // Validate social hours
+    double? socialHoursValue = double.tryParse(socialHours);
+    if (socialHoursValue == null || socialHoursValue < 0 || socialHoursValue > 24) {
+      return {
+        'success': false,
+        'message': 'Social hours must be a number between 0 and 24.',
+      };
+    }
+
+    // Prepare the request
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/activities/add'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'asleepTime': asleepTime,    // Expected format: 'HH:MM AM/PM'
+        'awakeTime': awakeTime,      // Expected format: 'HH:MM AM/PM'
+        'stressLevel': stressLevel.toLowerCase(),
+        'socialHours': socialHours,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      // Activity added successfully
+      print('Activity added successfully.');
+      return {
+        'success': true,
+        'message': data['message'],
+      };
+    } else {
+      // Failed to add activity
+      print('Failed to add activity: ${data['message']}');
+      return {
+        'success': false,
+        'message': data['message'],
+      };
+    }
+  } catch (e) {
+    print('Error while adding activity: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while adding the activity.',
+    };
+  }
+}
+  // New method to change password
+  Future<Map<String, dynamic>> changePassword(
+      String currentPassword, String newPassword, String confirmNewPassword) async {
     try {
       final token = await _getToken();
       if (token == null) {
@@ -336,50 +407,50 @@ Future<Map<String, dynamic>> addTask(
         };
       }
 
-      // Validate stress level
-      if (!['low', 'moderate', 'high'].contains(stressLevel.toLowerCase())) {
+      // Validate new passwords match
+      if (newPassword != confirmNewPassword) {
         return {
           'success': false,
-          'message': 'Invalid stress level. Must be one of: low, moderate, high.',
+          'message': 'New passwords do not match.',
         };
       }
 
       // Prepare the request
       final response = await http.post(
-        Uri.parse('$baseUrl/api/activities/add'),
+        Uri.parse('$baseUrl/api/users/change_password'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          'asleepTime': asleepTime,    // Expected format: 'HH:MM AM/PM'
-          'awakeTime': awakeTime,      // Expected format: 'HH:MM AM/PM'
-          'stressLevel': stressLevel.toLowerCase(),
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+          'confirmNewPassword': confirmNewPassword,
         }),
       );
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201) {
-        // Activity added successfully
-        print('Activity added successfully.');
+      if (response.statusCode == 200) {
+        // Password changed successfully
+        print('Password updated successfully.');
         return {
           'success': true,
           'message': data['message'],
         };
       } else {
-        // Failed to add activity
-        print('Failed to add activity: ${data['message']}');
+        // Failed to change password
+        print('Failed to update password: ${data['message']}');
         return {
           'success': false,
           'message': data['message'],
         };
       }
     } catch (e) {
-      print('Error while adding activity: $e');
+      print('Error while changing password: $e');
       return {
         'success': false,
-        'message': 'An error occurred while adding the activity.',
+        'message': 'An error occurred while updating the password.',
       };
     }
   }
