@@ -125,57 +125,62 @@ class ApiService {
   }
 
   // Method to add a task (protected route)
-  Future<Map<String, dynamic>> addTask(String taskName, String taskDetails, String deadline, String type) async {
-    try {
-      final token = await _getToken();
-      if (token == null) {
-        print('No token found. Please log in.');
-        return {
-          'success': false,
-          'message': 'User not authenticated.',
-        };
-      }
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/tasks/add'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'taskName': taskName,
-          'taskDetails': taskDetails,
-          'deadline': deadline,
-          'type': type,
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Task added successfully
-        print('Task added successfully.');
-        return {
-          'success': true,
-          'message': data['message'],
-        };
-      } else {
-        // Failed to add task
-        print('Failed to add task: ${data['message']}');
-        return {
-          'success': false,
-          'message': data['message'],
-        };
-      }
-    } catch (e) {
-      print('Error while adding task: $e');
+Future<Map<String, dynamic>> addTask(
+    String taskName,
+    String taskDetails,
+    String deadline,
+    String type,
+    int taskPriority) async {  // Added 'taskPriority' parameter
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
       return {
         'success': false,
-        'message': 'An error occurred while adding the task.',
+        'message': 'User not authenticated.',
       };
     }
-  }
 
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/tasks/add'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'taskName': taskName,
+        'taskDetails': taskDetails,
+        'deadline': deadline,
+        'type': type,
+        'taskPriority': taskPriority,  // Added 'taskPriority' to the body
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Task added successfully
+      print('Task added successfully.');
+      return {
+        'success': true,
+        'message': data['message'],
+      };
+    } else {
+      // Failed to add task
+      print('Failed to add task: ${data['message']}');
+      return {
+        'success': false,
+        'message': data['message'],
+      };
+    }
+  } catch (e) {
+    print('Error while adding task: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while adding the task.',
+    };
+  }
+}
   // Method to update a task (protected route)
   Future<Map<String, dynamic>> updateTask(int taskId, String taskName, String taskDetails, String deadline, String status, String type) async {
     try {
@@ -315,6 +320,66 @@ class ApiService {
       return {
         'success': false,
         'message': 'An error occurred while retrieving tasks.',
+      };
+    }
+  }
+  // New method to add an activity
+  Future<Map<String, dynamic>> addActivity(
+      String asleepTime, String awakeTime, String stressLevel) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        print('No token found. Please log in.');
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      // Validate stress level
+      if (!['low', 'moderate', 'high'].contains(stressLevel.toLowerCase())) {
+        return {
+          'success': false,
+          'message': 'Invalid stress level. Must be one of: low, moderate, high.',
+        };
+      }
+
+      // Prepare the request
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/activities/add'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'asleepTime': asleepTime,    // Expected format: 'HH:MM AM/PM'
+          'awakeTime': awakeTime,      // Expected format: 'HH:MM AM/PM'
+          'stressLevel': stressLevel.toLowerCase(),
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        // Activity added successfully
+        print('Activity added successfully.');
+        return {
+          'success': true,
+          'message': data['message'],
+        };
+      } else {
+        // Failed to add activity
+        print('Failed to add activity: ${data['message']}');
+        return {
+          'success': false,
+          'message': data['message'],
+        };
+      }
+    } catch (e) {
+      print('Error while adding activity: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while adding the activity.',
       };
     }
   }
