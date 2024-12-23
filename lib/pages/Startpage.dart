@@ -9,11 +9,14 @@ class Startpage extends StatelessWidget {
       backgroundColor:const Color(0xFF24282e),
       body: Column(
         children: [
-          const SizedBox(height: 300),
+          const SizedBox(height: 350),
           Center(
-            child: Image.asset('assets/images/logo.jpg'),
+            child: SizedBox(
+              width: 300,
+              child: Image.asset('assets/images/logo.jpg'),
+            )
           ),
-          const SizedBox(height: 250),
+          const SizedBox(height: 200),
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, '/login');
@@ -25,7 +28,7 @@ class Startpage extends StatelessWidget {
              
             ),
             
-            child: const Text('Start', style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+            child: const Text('Start', style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

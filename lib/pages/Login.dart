@@ -36,8 +36,8 @@ class _LoginState extends State<Login> {
                   Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Image.asset(
-                      'assets/images/logo_main.png',
-                      height: 300,
+                      'assets/images/login.png',
+                      height: 320,
                       width: 400,
                     ),
                   ),
@@ -51,14 +51,6 @@ class _LoginState extends State<Login> {
                             size: const Size(400, 100),
                             painter: TrianglePainter(),
                           ),
-                          const Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -71,47 +63,43 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  const SizedBox(height: 30),
                   // Email field
                   TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                    controller: emailController, // Bind to controller
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
                   // Password field
                   TextField(
-                    controller: passwordController,
+                    controller: passwordController, // Bind to controller
+                    obscureText: true,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      suffix: TextButton(
+                      suffixIcon: TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/forget');
                         },
-                        child: Text(
+                        child: const Text(
                           'Forgot?',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      labelText: "Password",
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                    obscureText: true,
-                    style: TextStyle(color: Colors.white),
                   ),
+                  const SizedBox(height: 70),
                 ],
               ),
             ),
@@ -176,10 +164,10 @@ class _LoginState extends State<Login> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF384454),
-                      minimumSize: const Size(390, 41),
+                      minimumSize: const Size(360, 50),
                       padding: const EdgeInsets.symmetric(horizontal: 50),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Text(

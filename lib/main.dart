@@ -53,12 +53,12 @@ class MyApp extends StatelessWidget {
         '/wakeup': (context) => const Wakeuppage(),
         '/changepass': (context) => const ChangePass(),
         '/insights': (context) => const Insights(),
-        '/taskspage':(context)=>TasksPage(),
-        '/recommendations':(context)=>RecommendationsPage(),
-        '/stresspage':(context)=>SocialActivityPage(),
+        '/taskspage':(context)=>const TasksPage(),
+        '/recommendations':(context)=>const RecommendationsPage(),
+        '/stresspage':(context)=>const SocialActivityPage(),
         '/forget':(context)=>ForgotPasswordScreen(),
         '/verify':(context)=>VerifyEmailScreen(),
-        '/Newpass':(context)=>Newpass(),
+        '/Newpass':(context)=>const Newpass(),
       },
       
     );

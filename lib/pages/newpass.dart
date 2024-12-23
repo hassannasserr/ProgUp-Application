@@ -1,8 +1,9 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
 class Newpass extends StatelessWidget {
+  const Newpass({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +11,7 @@ class Newpass extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -23,13 +24,13 @@ class Newpass extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.lock,
                 size: 80,
                 color: Color.fromARGB(255, 85, 104, 129),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 "Create New Password",
                 style: TextStyle(
                   fontSize: 24,
@@ -37,8 +38,8 @@ class Newpass extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 "Enter a new password for your account",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -46,31 +47,31 @@ class Newpass extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
               TextField(
                 obscureText: true,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "New Password",
-                  labelStyle: TextStyle(color: Colors.white54),
+                  labelStyle: const TextStyle(color: Colors.white54),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 obscureText: true,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: "Confirm Password",
-                  labelStyle: TextStyle(color: Colors.white54),
+                  labelStyle: const TextStyle(color: Colors.white54),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
-              SizedBox(height: 70),
+              const SizedBox(height: 70),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -78,13 +79,13 @@ class Newpass extends StatelessWidget {
                   // Save action
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 85, 104, 129),
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 48),
+                  backgroundColor: const Color.fromARGB(255, 85, 104, 129),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Save",
                   style: TextStyle(
                     fontSize: 18,

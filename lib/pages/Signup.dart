@@ -15,10 +15,10 @@ class _SignupState extends State<Signup> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-  
+
   // API service instance
   final ApiService api = ApiService();
-  
+
   // Loading state for the button
   bool isLoading = false;
 
@@ -31,7 +31,7 @@ class _SignupState extends State<Signup> {
           children: [
             // Header section with logo and title
             Container(
-              height: 400,
+              height: 300,
               width: double.infinity,
               color: const Color(0xFF384454),
               child: Column(
@@ -39,8 +39,8 @@ class _SignupState extends State<Signup> {
                   Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Image.asset(
-                      'assets/images/logo_main.png',
-                      height: 300,
+                      'assets/images/signup-08.png',
+                      height: 200,
                       width: 400,
                     ),
                   ),
@@ -54,14 +54,6 @@ class _SignupState extends State<Signup> {
                             size: const Size(400, 100),
                             painter: TrianglePainter(),
                           ),
-                          const Text(
-                            'Signup',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -74,186 +66,173 @@ class _SignupState extends State<Signup> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // First and last name fields
+                  const SizedBox(height: 30),
                   Row(
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: fnameController,
-
-                          decoration: const InputDecoration(
-                            labelText: 'First Name',
-                            labelStyle: TextStyle(color: Colors.white),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                          controller: fnameController, // Linked to controller
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: "First Name",
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: TextField(
-                          controller: lnameController,
-
-                          decoration: const InputDecoration(
-                            labelText: 'Last Name',
-                            labelStyle: TextStyle(color: Colors.white),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                          controller: lnameController, // Linked to controller
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: "Last Name",
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
                   // Email field
                   TextField(
-                    controller: emailController,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                    controller: emailController, // Linked to controller
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
                   // Password fields
                   TextField(
-                    controller: passwordController,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
+                    controller: passwordController, // Linked to controller
                     obscureText: true,
                     style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    controller: confirmPasswordController,
-
-                    decoration: const InputDecoration(
-                      labelText: 'Confirm Password',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
+                    controller: confirmPasswordController, // Linked to controller
                     obscureText: true,
                     style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 50),
             // 'Join now' button with loading indicator
-            isLoading 
-              ? const CircularProgressIndicator(color: Colors.white)
-              : ElevatedButton(
-                  onPressed: () async {
-                    // Basic validation
-                    if (fnameController.text.isEmpty || 
-                        lnameController.text.isEmpty || 
-                        emailController.text.isEmpty || 
-                        passwordController.text.isEmpty ||
-                        confirmPasswordController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please fill all fields')),
-                      );
-                      return;
-                    }
-
-                    // Password match validation
-                    if (passwordController.text != confirmPasswordController.text) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Passwords do not match!')),
-                      );
-                      return;
-                    }
-
-                    // Show loading indicator
-                    setState(() => isLoading = true);
-
-                    try {
-                      // Try to register user
-                      Map<String, dynamic> result = await api.registerUser(
-                        fnameController.text,
-                        lnameController.text,
-                        emailController.text,
-                        passwordController.text,
-                      );
-
-                      if (result['success']) {
-                        // Registration successful
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : ElevatedButton(
+                    onPressed: () async {
+                      // Basic validation
+                      if (fnameController.text.isEmpty ||
+                          lnameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          passwordController.text.isEmpty ||
+                          confirmPasswordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(result['message'] ?? 'Registration successful!')),
-
+                          const SnackBar(content: Text('Please fill all fields')),
                         );
-                        // Navigate to login page
-                        Navigator.pushReplacementNamed(context, '/login');
-                      } else {
-                        // Registration failed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(result['message'] ?? 'Registration failed. Please try again.')),
-
-                        );
+                        return;
                       }
-                    } catch (e) {
-                      // Handle any errors
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('An error occurred. Please try again.')),
-                      );
-                    } finally {
-                      // Hide loading indicator
-                      setState(() => isLoading = false);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF384454),
-                    minimumSize: const Size(390, 41),
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+
+                      // Password match validation
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Passwords do not match!')),
+                        );
+                        return;
+                      }
+
+                      // Show loading indicator
+                      setState(() => isLoading = true);
+
+                      try {
+                        // Try to register user
+                        Map<String, dynamic> result = await api.registerUser(
+                          fnameController.text,
+                          lnameController.text,
+                          emailController.text,
+                          passwordController.text,
+                        );
+
+                        if (result['success']) {
+                          // Registration successful
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    result['message'] ?? 'Registration successful!')),
+                          );
+                          // Navigate to login page
+                          Navigator.pushReplacementNamed(context, '/login');
+                        } else {
+                          // Registration failed
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(result['message'] ??
+                                    'Registration failed. Please try again.')),
+                          );
+                        }
+                      } catch (e) {
+                        // Handle any errors
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  'An error occurred. Please try again.')),
+                        );
+                      } finally {
+                        // Hide loading indicator
+                        setState(() => isLoading = false);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF384454),
+                      minimumSize: const Size(360, 50),
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Join now',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Join now',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
             // Link to login page
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Have an account? ',
-
                   style: TextStyle(color: Colors.white),
                 ),
                 TextButton(

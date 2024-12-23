@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
@@ -7,7 +6,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class VerifyEmailScreen extends StatelessWidget {
-  VerifyEmailScreen({Key? key}) : super(key: key);
+  VerifyEmailScreen({super.key});
 
   final TextEditingController codeController = TextEditingController();
 
@@ -67,7 +66,7 @@ class VerifyEmailScreen extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             GestureDetector(
@@ -133,7 +132,7 @@ class VerifyEmailScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/Newpass');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 85, 104, 129),
+                  backgroundColor: const Color.fromARGB(255, 85, 104, 129),
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
