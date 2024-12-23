@@ -1,15 +1,51 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:srs_app/api_service.dart';
 
 class Profilepage extends StatefulWidget {
   const Profilepage({super.key});
 
   @override
   State<Profilepage> createState() => _ProfilepageState();
-
-
 }
 
 class _ProfilepageState extends State<Profilepage> {
+  String userName = '';
+  String userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserDetails();
+  }
+
+  final ApiService api = ApiService();
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      final userDetails = await api.getUserDetails();
+      print(userDetails);
+
+      if (userDetails != null && userDetails['success']) {
+        setState(() {
+          userName = userDetails['user']?['Fname'] + ' ' + userDetails['user']?['Lname'] ?? 'No name';
+          userEmail = userDetails['user']?['Email'] ?? 'No email';
+        });
+      } else {
+        setState(() {
+          userName = 'Error loading name';
+          userEmail = 'Error loading email';
+        });
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+      setState(() {
+        userName = 'Error';
+        userEmail = 'Error';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,236 +54,160 @@ class _ProfilepageState extends State<Profilepage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 60),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                // logo
-                children: [
-                  Image.asset(
+            const SizedBox(height: 50),
+            // Profile header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: Text(
+                    'Profile',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poetsen',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Image.asset(
                     'assets/images/small_white_logo.png',
-                    height: 80,
-                    width: 80,
+                    height: 50,
+                    width: 50,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 80),
+            // Profile picture
+            Center(
+              child: Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 70,
+                    backgroundColor: Colors.white10,
+                    backgroundImage: AssetImage('assets/images/profile.jpg'),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.orange,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Name and Email with lines
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  Text(
+                    userName.isEmpty ? 'Loading...' : 'Name : ' + userName,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 20,
+                      fontFamily: 'Poetsen',
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  //  name and picture
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 30),
-                        // name
-                        child: Text(
-                          'SharShora Elamora',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'AbhayaLibre',
-                          ),
-                        ),
-                      ),
-                      // profile picture
-                      Padding(
-                        padding: EdgeInsets.only(right: 20),
-                        child: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.white10,
-                              backgroundImage:
-                              AssetImage('assets/images/profile.jpg'),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                radius: 16,
-                                backgroundColor: Colors.orange,
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Divider(
+                    color: Colors.white70,
+                    thickness: 1,
+                    indent: 30,
+                    endIndent: 30,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    userEmail.isEmpty ? 'Loading...' : 'Email: ' + userEmail,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 20,
+                      fontFamily: 'Poetsen',
+
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(
+                    color: Colors.white70,
+                    thickness: 1,
+                    indent: 30,
+                    endIndent: 30,
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 30),
+            // Action buttons
             Center(
-              child: Column(
-                children: [
-                  //email field
-                  const ProfileField(
-                    icon: Icons.email_outlined,
-                    hint: 'sherryezz04@gamil',
-                    label: 'Your Email',
-                    inputType: TextInputType.emailAddress,
-                  ),
-                  //phone number field
-                  const ProfileField(
-                    icon: Icons.phone_outlined,
-                    hint: '01229933092',
-                    label: 'Phone Number',
-                    inputType: TextInputType.phone,
-                  ),
-                  //password field
-                  const ProfileField(
-                    icon: Icons.lock_outline,
-                    hint: '••••••••',
-                    label: 'Password',
-                    isPassword: true,
-                  ),
-                  const SizedBox(height: 20),
-                  // change password and logout buttons
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/changepass');
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/changepass');
+                      },
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 60),
+                        backgroundColor: Colors.transparent,
+                        side: const BorderSide(color: Colors.green),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Change Password',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.green,
+                          fontFamily: 'Poetsen',
 
-                          },
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor: Colors.transparent,
-                            side: const BorderSide(color: Colors.green),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Change Password',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.green,
-                            ),
-                          ),
                         ),
-                        const SizedBox(height: 20),
-                        OutlinedButton(
-                          onPressed: () {
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.red),
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 20),
+                    OutlinedButton(
+                      onPressed: () {
+                        // Handle logout functionality
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.red),
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                          fontFamily: 'Poetsen',
+
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
       bottomNavigationBar: const BottomNavBar(),
-    );
-  }
-}
-
-class ProfileField extends StatefulWidget {
-  final IconData icon;
-  final String hint;
-  final String label;
-  final bool isPassword;
-  final TextInputType inputType;
-
-  const ProfileField({
-    super.key,
-    required this.icon,
-    required this.hint,
-    required this.label,
-    this.isPassword = false,
-    this.inputType = TextInputType.text,
-  });
-
-  @override
-  _ProfileFieldState createState() => _ProfileFieldState();
-}
-
-class _ProfileFieldState extends State<ProfileField> {
-  final FocusNode _focusNode = FocusNode();
-  bool _isFocused = false;
-  bool _isObscured = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      setState(() {
-        _isFocused = _focusNode.hasFocus;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-      child: TextField(
-        focusNode: _focusNode,
-        obscureText: widget.isPassword && _isObscured,
-        keyboardType: widget.inputType,
-        readOnly: true,
-        decoration: InputDecoration(
-          //change text color
-          hintStyle: TextStyle(
-            color: Colors.white,
-          ),
-          prefixIcon: Icon(widget.icon),
-          hintText: widget.hint,
-          labelText: widget.label,
-          suffixIcon: widget.isPassword
-              ? IconButton(
-            icon: Icon(
-              _isObscured ? Icons.visibility_off : Icons.visibility,
-              color: _isFocused ? Colors.green : Colors.grey,
-            ),
-            onPressed: () {
-              setState(() {
-                _isObscured = !_isObscured;
-              });
-            },
-          )
-              : null,
-          labelStyle: TextStyle(
-            color: _isFocused ? Colors.green : Colors.white70,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.green),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -299,23 +259,20 @@ class BottomNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-     onTap: () {
-            // Navigate to the respective page
-            if (label == 'Home') {
-              Navigator.pushNamed(context, '/homepage');
-            } else if (label == 'Tasks') {
-              Navigator.pushNamed(context, '/taskspage');
-              print("Tasks");
-            } else if (label == 'Pomo') {
-              Navigator.pushNamed(context, '/pomo');
-             print("Promo");
-            } else if (label == 'Log') {
-              Navigator.pushNamed(context, '/insights');
-              print("Log");
-            } else if (label == 'Me') {
-              Navigator.pushNamed(context, '/profile');
-            }
-          },
+      onTap: () {
+        // Navigate to the respective page
+        if (label == 'Home') {
+          Navigator.pushNamed(context, '/homepage');
+        } else if (label == 'Tasks') {
+          Navigator.pushNamed(context, '/taskspage');
+        } else if (label == 'Pomo') {
+          Navigator.pushNamed(context, '/pomo');
+        } else if (label == 'Log') {
+          Navigator.pushNamed(context, '/insights');
+        } else if (label == 'Me') {
+          Navigator.pushNamed(context, '/profile');
+        }
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
