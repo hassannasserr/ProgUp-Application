@@ -2,23 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
 import 'package:srs_app/api_service.dart';
+
 class TasksPage extends StatefulWidget {
   @override
   _TasksPageState createState() => _TasksPageState();
 }
+
 class _TasksPageState extends State<TasksPage> {
-    @override
-  final List<String> tasks = [
-    "Task 1",
-    "Task 2",
-    "Task 3",
-    "Task 4",
-    "Task 5",
-    "Task 6",
-    "Task 7",
-    "Task 8",
-    "Task 9",
-  ];
+  @override
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    final apiService = ApiService(); // Assuming this is the service with the function
+    final response = await apiService.getTasks();
+
+    if (response['success'] == true) {
+      // Print the retrieved data
+      print("Tasks Data: ${response['tasks']}");
+      setState(() {
+        TaskData.alltasks = (response['tasks'] as List).map((task) {
+          Color taskColor;
+          switch (task['Type']) {
+            case 'Study':
+              taskColor = Colors.blue;
+              break;
+            case 'Social':
+              taskColor = Colors.green;
+              break;
+            case 'Work':
+              taskColor = Colors.red;
+              break;
+            default:
+              taskColor = Colors.grey;
+          }
+
+          // Ensure task['id'] is not null and is a valid integer
+          int taskId = task['TaskID'] != null ? int.tryParse(task['TaskID'].toString()) ?? 0 : 0;
+          print("Task ID: $taskId");
+
+          // Ensure task['name'] is not null and is a valid string
+          String taskName = task['TaskName'] != null ? task['TaskName'].toString() : 'Unnamed Task';
+          print("Task Name: $taskName");
+
+          // Ensure task['description'] is not null and is a valid string
+          String taskDescription = task['TaskDetails'] != null ? task['TaskDetails'].toString() : '';
+          print("Task Description: $taskDescription");
+
+          // Ensure task['priority'] is not null and is a valid integer
+          int taskPriority = task['Taskpriority'] != null ? int.tryParse(task['Taskpriority'].toString()) ?? 0 : 0;
+          print("Task Priority: $taskPriority");
+
+          // Ensure task['type'] is not null and is a valid string
+          String taskType = task['Type'] != null ? task['Type'].toString() : '';
+          print("Task Type: $taskType");
+
+          return TaskItem(
+            taskId,
+            taskName,
+            taskDescription,
+            taskPriority,
+            taskType,
+            color: taskColor,
+          );
+        }).toList();
+        print("All Tasks: ${TaskData.alltasks}");
+        isLoading = false;
+      });
+    } else {
+      print("Error: ${response['message']}"); // In case of an error
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,33 +195,10 @@ class _TasksPageState extends State<TasksPage> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: TaskData.studyTasks.length +
-                      TaskData.socialTasks.length +
-                      TaskData.physicalTasks.length +
-                      TaskData.otherTasks.length,
+                  itemCount: TaskData.alltasks.length,
                   itemBuilder: (context, index) {
                     late TaskItem task;
-                    if (index < TaskData.studyTasks.length) {
-                      task = TaskData.studyTasks[index];
-                    } else if (index <
-                        TaskData.studyTasks.length +
-                            TaskData.socialTasks.length) {
-                      task = TaskData
-                          .socialTasks[index - TaskData.studyTasks.length];
-                    } else if (index <
-                        TaskData.studyTasks.length +
-                            TaskData.socialTasks.length +
-                            TaskData.physicalTasks.length) {
-                      task = TaskData.physicalTasks[index -
-                          TaskData.studyTasks.length -
-                          TaskData.socialTasks.length];
-                    } else {
-                      task = TaskData.otherTasks[index -
-                          TaskData.studyTasks.length -
-                          TaskData.socialTasks.length -
-                          TaskData.physicalTasks.length];
-                    }
-
+                    task = TaskData.alltasks[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: TaskContainer(
@@ -453,39 +492,39 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     },
                   ),
                   // ...existing code...
-                DropdownButtonFormField<int>(
-                  decoration: const InputDecoration(
-                    labelText: 'Task Priority',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                  DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      labelText: 'Task Priority',
+                      labelStyle: TextStyle(color: Colors.white),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
+                    value: taskPriority,
+                    items: List.generate(5, (index) => index + 1)
+                        .map((priority) => DropdownMenuItem(
+                              value: priority,
+                              child: Text(
+                                priority.toString(),
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        taskPriority = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please choose a priority';
+                      }
+                      return null;
+                    },
                   ),
-                  value: taskPriority,
-                  items: List.generate(5, (index) => index + 1)
-                      .map((priority) => DropdownMenuItem(
-                            value: priority,
-                            child: Text(
-                              priority.toString(),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      taskPriority = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please choose a priority';
-                    }
-                    return null;
-                  },
-                ),
 // ...existing code...
                 ],
               ),
@@ -502,7 +541,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                       style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
-                  onPressed:() async {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 

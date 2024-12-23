@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
+import 'package:srs_app/api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,19 +10,89 @@ class HomePage extends StatefulWidget {
 }
 
 class _TaskspageState extends State<HomePage> {
-  // List of tasks
-    final List<String> tasks = [
-    "Task 1",
-    "Task 2",
-    "Task 3",
-    "Task 4",
-    "Task 5",
-    "Task 6",
-    "Task 7",
-    "Task 8",
-    "Task 9",
-  ];
-  int get taskCount => tasks.length;
+  bool isLoading = true;
+  int tasklength = 0;
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+    
+  }
+
+  Future<void> _loadTasks() async {
+    final apiService =
+        ApiService(); // Assuming this is the service with the function
+    final response = await apiService.getTasks();
+
+    if (response['success'] == true) {
+      // Print the retrieved data
+      print("Tasks Data: ${response['tasks']}");
+      setState(() {
+        TaskData.alltasks = (response['tasks'] as List).map((task) {
+          Color taskColor;
+          switch (task['Type']) {
+            case 'Study':
+              taskColor = Colors.blue;
+              break;
+            case 'Social':
+              taskColor = Colors.green;
+              break;
+            case 'Work':
+              taskColor = Colors.red;
+              break;
+            default:
+              taskColor = Colors.grey;
+          }
+
+          // Ensure task['id'] is not null and is a valid integer
+          int taskId = task['TaskID'] != null
+              ? int.tryParse(task['TaskID'].toString()) ?? 0
+              : 0;
+          print("Task ID: $taskId");
+
+          // Ensure task['name'] is not null and is a valid string
+          String taskName = task['TaskName'] != null
+              ? task['TaskName'].toString()
+              : 'Unnamed Task';
+          print("Task Name: $taskName");
+
+          // Ensure task['description'] is not null and is a valid string
+          String taskDescription =
+              task['TaskDetails'] != null ? task['TaskDetails'].toString() : '';
+          print("Task Description: $taskDescription");
+
+          // Ensure task['priority'] is not null and is a valid integer
+          int taskPriority = task['Taskpriority'] != null
+              ? int.tryParse(task['Taskpriority'].toString()) ?? 0
+              : 0;
+          print("Task Priority: $taskPriority");
+
+          // Ensure task['type'] is not null and is a valid string
+          String taskType = task['Type'] != null ? task['Type'].toString() : '';
+          print("Task Type: $taskType");
+
+          return TaskItem(
+            taskId,
+            taskName,
+            taskDescription,
+            taskPriority,
+            taskType,
+            color: taskColor,
+          );
+        }).toList();
+        tasklength = TaskData.alltasks.length;
+        print("All Tasks: ${TaskData.alltasks}");
+        isLoading = false;
+      });
+    } else {
+      print("Error: ${response['message']}"); // In case of an error
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +130,7 @@ class _TaskspageState extends State<HomePage> {
                         ),
                       ),
                       Text(
-                        "$taskCount Tasks Today",
+                        "$tasklength Tasks Today",
                         style: const TextStyle(
                           fontSize: 36,
                           color: Color(0xFF50b484),
@@ -78,70 +149,48 @@ class _TaskspageState extends State<HomePage> {
               const SizedBox(height: 20),
               // Task Containers List
               ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: TaskData.studyTasks.length +
-                      TaskData.socialTasks.length +
-                      TaskData.physicalTasks.length +
-                      TaskData.otherTasks.length,
-                  itemBuilder: (context, index) {
-                    late TaskItem task;
-                    if (index < TaskData.studyTasks.length) {
-                      task = TaskData.studyTasks[index];
-                    } else if (index <
-                        TaskData.studyTasks.length +
-                            TaskData.socialTasks.length) {
-                      task = TaskData
-                          .socialTasks[index - TaskData.studyTasks.length];
-                    } else if (index <
-                        TaskData.studyTasks.length +
-                            TaskData.socialTasks.length +
-                            TaskData.physicalTasks.length) {
-                      task = TaskData.physicalTasks[index -
-                          TaskData.studyTasks.length -
-                          TaskData.socialTasks.length];
-                    } else {
-                      task = TaskData.otherTasks[index -
-                          TaskData.studyTasks.length -
-                          TaskData.socialTasks.length -
-                          TaskData.physicalTasks.length];
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: TaskContainer(
-                        taskName: task.name,
-                        color: task.color,
-                      ),
-                    );
-                  },
-                ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: TaskData.alltasks.length,
+                itemBuilder: (context, index) {
+                  late TaskItem task;
+                  task = TaskData.alltasks[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: TaskContainer(
+                      taskName: task.name,
+                      color: task.color,
+                    ),
+                  );
+                },
+              ),
               Center(
                 child: GestureDetector(
                   onTap: () {
                     // Navigate to the RecommendationsPage
                     Navigator.pushNamed(context, '/recommendations');
                   },
-                child: Container(
-                   width: 300, // Automatically adjusts to parent width
-                   height: 50,
-                  decoration: BoxDecoration(
-                   color: const Color(0xFF24282e), // Navy blue color
-                  borderRadius: BorderRadius.circular(20), // Rounded corners
-                  border: Border.all(color: Colors.pink, width: 2),
-                 ),
-                 child: const Center(
-                   child: Text(
-                     "Reccomendations",
-                     style: TextStyle(
-                       color: Colors.pink,
-                       fontSize: 18,
-                       fontWeight: FontWeight.bold,
-                     ),
-                   ),
-                 ),
+                  child: Container(
+                    width: 300, // Automatically adjusts to parent width
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF24282e), // Navy blue color
+                      borderRadius:
+                          BorderRadius.circular(20), // Rounded corners
+                      border: Border.all(color: Colors.pink, width: 2),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Reccomendations",
+                        style: TextStyle(
+                          color: Colors.pink,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ) ,
               ),
             ],
           ),
@@ -151,6 +200,7 @@ class _TaskspageState extends State<HomePage> {
     );
   }
 }
+
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
 
@@ -171,7 +221,8 @@ class BottomNavBar extends StatelessWidget {
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            BottomNavItem(icon: Icons.home_outlined, label: 'Home', isActive: true),
+            BottomNavItem(
+                icon: Icons.home_outlined, label: 'Home', isActive: true),
             BottomNavItem(icon: Icons.task_outlined, label: 'Tasks'),
             BottomNavItem(icon: Icons.access_time_outlined, label: 'Pomo'),
             BottomNavItem(icon: Icons.menu_book_outlined, label: 'Log'),
@@ -182,6 +233,7 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 }
+
 class BottomNavItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -209,7 +261,6 @@ class BottomNavItem extends StatelessWidget {
               print("Tasks");
             } else if (label == 'Pomo') {
               Navigator.pushNamed(context, '/pomo');
-             
             } else if (label == 'Log') {
               Navigator.pushNamed(context, '/insights');
               print("Log");

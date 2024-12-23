@@ -69,52 +69,20 @@ class TaskContainer extends StatelessWidget {
 }
 
 class TaskData {
-  static final List<TaskItem> alltasks = [
-    TaskItem("Math Homework", Color(0xFF283c64)),
-    TaskItem("Read History Chapter", Color(0xFF283c64)),
-    TaskItem("Write Essay", Color(0xFF283c64)),
-    TaskItem("Call John", Color(0xFF386454)),
-    TaskItem("Birthday Party", Color(0xFF386454)),
-    TaskItem("Volunteer Work", Color(0xFF386454)),
-    TaskItem("Morning Jog", Color(0xFF702c54)),
-    TaskItem("Yoga Class", Color(0xFF702c54)),
-    TaskItem("Gym Workout", Color(0xFF702c54)),
-    TaskItem("Grocery Shopping", Colors.grey),
-    TaskItem("Car Maintenance", Colors.grey),
-    TaskItem("Plan Vacation", Colors.grey),
-  ];
-  static final List<TaskItem> studyTasks = [
-    TaskItem("Math Homework", Color(0xFF283c64)),
-    TaskItem("Read History Chapter", Color(0xFF283c64)),
-    TaskItem("Write Essay", Color(0xFF283c64)),
-  ];
+  static List<TaskItem> alltasks = [];
 
-  static final List<TaskItem> socialTasks = [
-    TaskItem("Call John", Color(0xFF386454)),
-    TaskItem("Birthday Party", Color(0xFF386454)),
-    TaskItem("Volunteer Work", Color(0xFF386454)),
-  ];
-
-  static final List<TaskItem> physicalTasks = [
-    TaskItem("Morning Jog", Color(0xFF702c54)),
-    TaskItem("Yoga Class", Color(0xFF702c54)),
-    TaskItem("Gym Workout", Color(0xFF702c54)),
-  ];
-
-  static final List<TaskItem> otherTasks = [
-    TaskItem("Grocery Shopping", Colors.grey),
-    TaskItem("Car Maintenance", Colors.grey),
-    TaskItem("Plan Vacation", Colors.grey),
-  ];
 }
 
 class TaskItem {
+  final int id;
   final String name;
-  final Color color;
+  final String description;
+  final int taskpriority;
+  final String tasktype;
+  Color color;
 
-  TaskItem(this.name, this.color);
+  TaskItem(this.id, this.name, this.description, this.taskpriority, this.tasktype, {this.color = Colors.red});
 }
-
 class TaskListView extends StatelessWidget {
   final List<TaskItem> tasks;
 
