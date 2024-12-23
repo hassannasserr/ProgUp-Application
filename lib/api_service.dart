@@ -125,7 +125,8 @@ class ApiService {
   }
 
   // Method to add a task (protected route)
-Future<Map<String, dynamic>> addTask(
+  Future<Map<String, dynamic>> addTask(
+
     String taskName,
     String taskDetails,
     String deadline,
@@ -181,6 +182,7 @@ Future<Map<String, dynamic>> addTask(
     };
   }
 }
+
   // Method to update a task (protected route)
   Future<Map<String, dynamic>> updateTask(int taskId, String taskName, String taskDetails, String deadline, String status, String type) async {
     try {
@@ -323,6 +325,7 @@ Future<Map<String, dynamic>> addTask(
       };
     }
   }
+
   // New method to add an activity
   // Method to add an activity (modified to include socialHours)
 Future<Map<String, dynamic>> addActivity(
@@ -395,6 +398,7 @@ Future<Map<String, dynamic>> addActivity(
   }
 }
   // New method to change password
+
   Future<Map<String, dynamic>> changePassword(
       String currentPassword, String newPassword, String confirmNewPassword) async {
     try {
@@ -454,16 +458,17 @@ Future<Map<String, dynamic>> addActivity(
       };
     }
   }
-  Future<Map<String, dynamic>> getUserDetails() async {
-    try {
-      final token = await storage.read(key: 'jwt_token');
-      if (token == null) {
-        print('Error: Token is null.');
-        return {
-          'success': false,
-          'message': 'User not authenticated.',
-        };
-      }
+
+Future<Map<String, dynamic>> getUserDetails() async {
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
+      return {
+        'success': false,
+        'message': 'User not authenticated.',
+      };
+    }
 
       print('Token: $token');
       print('Requesting user details...');
@@ -499,4 +504,7 @@ Future<Map<String, dynamic>> addActivity(
       };
     }
   }
+
+}
+
 }
