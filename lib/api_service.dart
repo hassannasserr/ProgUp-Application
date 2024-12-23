@@ -68,7 +68,7 @@ class ApiService {
   }
 
   // Updated login method
-  Future<Map<String, dynamic>> login(String email, String password) async {
+ Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/api/users/login'),
@@ -92,14 +92,16 @@ class ApiService {
         String token = data['token'];
         await _storeToken(token);
 
-        // Optionally, store user data if needed
+        // Retrieve user data and firstLoginToday flag
         Map<String, dynamic> user = data['user'];
+        bool firstLoginToday = data['firstLoginToday'];
 
         print('Login successful.');
         return {
           'success': true,
           'message': data['message'],
           'user': user,
+          'firstLoginToday': firstLoginToday,
         };
       } else {
         // Login failed
@@ -117,6 +119,7 @@ class ApiService {
       };
     }
   }
+
 
   // Method to logout (delete token)
   Future<void> logout() async {
@@ -505,8 +508,7 @@ Future<Map<String, dynamic>> getUserDetails() async {
     }
   }
 
-  // Method to call the /api/predict endpoint
-  Future<Map<String, dynamic>> getPredictions() async {
+  Future<Map<String, dynamic>> createSchedule() async {
     try {
       final token = await _getToken();
 
@@ -529,55 +531,97 @@ Future<Map<String, dynamic>> getUserDetails() async {
         final data = jsonDecode(response.body);
 
         if (data['success']) {
-          // Check if 'action_required' is present
-          if (data.containsKey('action_required')) {
-            return {
-              'success': true,
-              'message': data['message'],
-              'action_required': data['action_required'],
-              'predicted_tasks_finished': data['predicted_tasks_finished'],
-              'predicted_study_hours_per_day': data['predicted_study_hours_per_day'],
-              // Depending on the action_required, retrieve the appropriate tasks
-              'tasks_available': data['tasks_available'],
-            };
-          } else {
-            // No action required, tasks are ready to be scheduled
-            return {
-              'success': true,
-              'message': data['message'],
-              'tasks_to_schedule': data['tasks_to_schedule'],
-              'predicted_tasks_finished': data['predicted_tasks_finished'],
-              'predicted_study_hours_per_day': data['predicted_study_hours_per_day'],
-            };
-          }
+          // Schedule created successfully
+          return {
+            'success': true,
+            'message': data['message'],
+            'schedule': data['schedule'], // Contains schedule details
+            'tasks_scheduled': data['tasks_scheduled'], // List of task details
+          };
         } else {
-          // The API returned success: false
+          // Handle cases where action is required
+          String actionRequired = data['action_required'] ?? '';
           return {
             'success': false,
             'message': data['message'],
+            'action_required': actionRequired,
           };
         }
-      } else if (response.statusCode == 400) {
-        final data = jsonDecode(response.body);
-        return {
-          'success': false,
-          'message': data['message'],
-        };
       } else {
+        // Handle other status codes
         return {
           'success': false,
           'message': 'Server error: ${response.statusCode}',
         };
       }
     } catch (e) {
-      print('Error in getPredictions: $e');
+      print('Error in createSchedule: $e');
       return {
         'success': false,
-        'message': 'An error occurred while fetching predictions.',
+        'message': 'An error occurred while creating the schedule.',
       };
     }
   }
-   // Method to add a PomoActivity
+
+  // Method to call the /api/get_schedule endpoint
+  Future<Map<String, dynamic>> getSchedule() async {
+    try {
+      final token = await _getToken();
+
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/get_schedule'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['success']) {
+          // Schedule retrieved successfully
+          return {
+            'success': true,
+            'message': data['message'],
+            'schedule': data['schedule'], // Contains schedule details
+            'tasks_scheduled': data['tasks_scheduled'], // List of task details
+          };
+        } else {
+          // Handle cases where schedule is not found
+          return {
+            'success': false,
+            'message': data['message'],
+          };
+        }
+      } else if (response.statusCode == 404) {
+        final data = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': data['message'],
+        };
+      } else {
+        // Handle other status codes
+        return {
+          'success': false,
+          'message': 'Server error: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      print('Error in getSchedule: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while retrieving the schedule.',
+      };
+    }
+  } // Method to add a PomoActivity
   Future<Map<String, dynamic>> addPomoActivity(
       String activityType, String activityDuration) async {
     try {
