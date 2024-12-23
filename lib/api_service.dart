@@ -577,5 +577,156 @@ Future<Map<String, dynamic>> getUserDetails() async {
       };
     }
   }
+   // Method to add a PomoActivity
+  Future<Map<String, dynamic>> addPomoActivity(
+      String activityType, String activityDuration) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        print('No token found. Please log in.');
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      // Validate activity duration
+      double? duration = double.tryParse(activityDuration);
+      if (duration == null || duration <= 0 || duration > 24) {
+        return {
+          'success': false,
+          'message': 'Activity duration must be a number between 0 and 24.',
+        };
+      }
+
+      // Prepare the request
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/pomo_activities/add'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'activityType': activityType,
+          'activityDuration': activityDuration,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        // Activity added successfully
+        print('PomoActivity added successfully.');
+        return {
+          'success': true,
+          'message': data['message'],
+        };
+      } else {
+        // Failed to add activity
+        print('Failed to add PomoActivity: ${data['message']}');
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Failed to add PomoActivity.',
+        };
+      }
+    } catch (e) {
+      print('Error while adding PomoActivity: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while adding the PomoActivity.',
+      };
+    }
+  }
+  Future<Map<String, dynamic>> getPomoActivities() async {
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
+      return {
+        'success': false,
+        'message': 'User not authenticated.',
+      };
+    }
+
+    // Prepare the request
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/pomo_activities'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      // Data retrieved successfully
+      print('PomoActivities retrieved successfully.');
+      return {
+        'success': true,
+        'activities': data['activities'],
+      };
+    } else {
+      // Failed to retrieve data
+      print('Failed to retrieve PomoActivities: ${data['message']}');
+      return {
+        'success': false,
+        'message': data['message'] ?? 'Failed to retrieve PomoActivities.',
+      };
+    }
+  } catch (e) {
+    print('Error while retrieving PomoActivities: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while retrieving PomoActivities.',
+    };
+  }
+}
+Future<Map<String, dynamic>> getActivitySummaries() async {
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
+      return {
+        'success': false,
+        'message': 'User not authenticated.',
+      };
+    }
+
+    // Prepare the request
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/activities/summary'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      // Summaries retrieved successfully
+      print('Activity summaries retrieved successfully.');
+      return {
+        'success': true,
+        'summaries': data['summaries'],
+      };
+    } else {
+      // Failed to retrieve summaries
+      print('Failed to retrieve activity summaries: ${data['message']}');
+      return {
+        'success': false,
+        'message': data['message'] ?? 'Failed to retrieve activity summaries.',
+      };
+    }
+  } catch (e) {
+    print('Error while retrieving activity summaries: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while retrieving activity summaries.',
+    };
+  }
+}
+
 
 }
