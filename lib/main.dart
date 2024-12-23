@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:srs_app/pages/ForgetPass.dart';
 import 'package:srs_app/pages/ProfilePage.dart';
 import 'package:srs_app/pages/RecommendationsPage.dart';
 import 'package:srs_app/pages/Signup.dart';
 import 'package:srs_app/pages/Taskpage.dart';
+import 'package:srs_app/pages/VerifyEmailScreen.dart';
 import 'package:srs_app/pages/insghts.dart';
 import 'package:srs_app/pages/login.dart';
 import 'package:srs_app/pages/Homepage.dart';
 import 'package:srs_app/pages/SleepPage.dart';
 import 'package:srs_app/pages/WakeUpPage.dart';
 import 'package:srs_app/pages/ChangePass.dart';
+import 'package:srs_app/pages/newpass.dart';
 import 'package:srs_app/pages/pomodoro.dart';
 import 'package:srs_app/pages/Startpage.dart';
 import 'package:srs_app/pages/FirstPage_Stress.dart';
@@ -35,7 +38,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
        //home:Wakeuppage(),
-       home: Startpage(),
+       home: const Startpage(),
        //home: Login(),
        //home: Profilepage(),
       //home: ChangePass(),
@@ -53,6 +56,9 @@ class MyApp extends StatelessWidget {
         '/taskspage':(context)=>TasksPage(),
         '/recommendations':(context)=>RecommendationsPage(),
         '/stresspage':(context)=>SocialActivityPage(),
+        '/forget':(context)=>ForgotPasswordScreen(),
+        '/verify':(context)=>VerifyEmailScreen(),
+        '/Newpass':(context)=>Newpass(),
       },
       
     );

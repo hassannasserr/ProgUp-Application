@@ -196,12 +196,28 @@ class _ProfilepageState extends State<Profilepage> {
                           color: Colors.red,
                           fontFamily: 'Poetsen',
 
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      child: TextField(
+        focusNode: _focusNode,
+        obscureText: widget.isPassword && _isObscured,
+        keyboardType: widget.inputType,
+        readOnly: true,
+        decoration: InputDecoration(
+          //change text color
+          hintStyle: const TextStyle(
+            color: Colors.white,
+          ),
+          prefixIcon: Icon(widget.icon),
+          hintText: widget.hint,
+          labelText: widget.label,
+          suffixIcon: widget.isPassword
+              ? IconButton(
+            icon: Icon(
+              _isObscured ? Icons.visibility_off : Icons.visibility,
+              color: _isFocused ? Colors.green : Colors.grey,
             ),
             const SizedBox(height: 20),
           ],

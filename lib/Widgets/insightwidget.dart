@@ -222,7 +222,7 @@ class InsightWidgetBase extends StatelessWidget {
             child: BarChart(
               BarChartData(
                 borderData: FlBorderData(show: false),
-                gridData: FlGridData(show: false),
+                gridData: const FlGridData(show: false),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -253,8 +253,8 @@ class InsightWidgetBase extends StatelessWidget {
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 barGroups: values
                     .asMap()
