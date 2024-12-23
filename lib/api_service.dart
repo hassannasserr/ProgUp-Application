@@ -470,38 +470,41 @@ Future<Map<String, dynamic>> getUserDetails() async {
       };
     }
 
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/users/me'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+      print('Token: $token');
+      print('Requesting user details...');
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/users/me'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    final data = jsonDecode(response.body);
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      // User data retrieved successfully
-      print('User data retrieved successfully.');
-      return {
-        'success': true,
-        'user': data['user'],
-      };
-    } else {
-      // Failed to get user data
-      print('Failed to get user data: ${data['message']}');
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'user': data['user'],
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Error fetching user data.',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
       return {
         'success': false,
-        'message': data['message'],
+        'message': 'An error occurred while retrieving user data.',
       };
     }
-  } catch (e) {
-    print('Error while retrieving user data: $e');
-    return {
-      'success': false,
-      'message': 'An error occurred while retrieving user data.',
-    };
   }
+
 }
 
 }

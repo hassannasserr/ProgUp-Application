@@ -26,14 +26,27 @@ class _ChangePassState extends State<ChangePass> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: const Padding(
+          padding: EdgeInsets.only(top: 20.0), // Adjust the top padding as needed
+          child: Text(
+            'Change Password',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontFamily: 'Poetsen',
+            ),
+          ),
+        ),
         backgroundColor: const Color(0xFF384454),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pushNamed(context, '/profile');
-          },
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 20.0), // Adjust the top padding as needed
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
         ),
       ),
       backgroundColor: const Color(0xFF24282e),
@@ -148,7 +161,10 @@ class TransparentField extends StatelessWidget {
       obscureText: label.toLowerCase().contains('password'),
       decoration: InputDecoration(
         hintText: label,
-        hintStyle: const TextStyle(color: Colors.white54),
+        hintStyle: const TextStyle(
+          color: Colors.white54,
+          fontFamily: 'Poetsen',
+        ),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
@@ -237,6 +253,7 @@ class ChangeButton extends StatelessWidget {
           color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.bold,
+          fontFamily: 'Poetsen',
         ),
       ),
     );
