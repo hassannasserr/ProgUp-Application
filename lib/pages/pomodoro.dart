@@ -223,34 +223,10 @@ void selecttask() {
               child: ListView.builder(
               //shrinkWrap: true,
               //physics: const NeverScrollableScrollPhysics(),
-              itemCount: TaskData.studyTasks.length +
-                  TaskData.socialTasks.length +
-                  TaskData.physicalTasks.length +
-                  TaskData.otherTasks.length,
+              itemCount: TaskData.alltasks.length,
               itemBuilder: (context, index) {
                 late TaskItem task;
-
-                if (index < TaskData.studyTasks.length) {
-                  task = TaskData.studyTasks[index];
-                } else if (index <
-                    TaskData.studyTasks.length +
-                        TaskData.socialTasks.length) {
-                  task = TaskData.socialTasks[
-                      index - TaskData.studyTasks.length];
-                } else if (index <
-                    TaskData.studyTasks.length +
-                        TaskData.socialTasks.length +
-                        TaskData.physicalTasks.length) {
-                  task = TaskData.physicalTasks[index -
-                      TaskData.studyTasks.length -
-                      TaskData.socialTasks.length];
-                } else {
-                  task = TaskData.otherTasks[index -
-                      TaskData.studyTasks.length -
-                      TaskData.socialTasks.length -
-                      TaskData.physicalTasks.length];
-                }
-
+                task = TaskData.alltasks[index];
                 return GestureDetector(
                   onTap: () {
                     setDialogState(() {

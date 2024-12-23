@@ -125,56 +125,62 @@ class ApiService {
   }
 
   // Method to add a task (protected route)
-  Future<Map<String, dynamic>> addTask(String taskName, String taskDetails, String deadline, String type) async {
-    try {
-      final token = await _getToken();
-      if (token == null) {
-        print('No token found. Please log in.');
-        return {
-          'success': false,
-          'message': 'User not authenticated.',
-        };
-      }
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/tasks/add'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'taskName': taskName,
-          'taskDetails': taskDetails,
-          'deadline': deadline,
-          'type': type,
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Task added successfully
-        print('Task added successfully.');
-        return {
-          'success': true,
-          'message': data['message'],
-        };
-      } else {
-        // Failed to add task
-        print('Failed to add task: ${data['message']}');
-        return {
-          'success': false,
-          'message': data['message'],
-        };
-      }
-    } catch (e) {
-      print('Error while adding task: $e');
+  Future<Map<String, dynamic>> addTask(
+    String taskName,
+    String taskDetails,
+    String deadline,
+    String type,
+    int taskPriority) async {  // Added 'taskPriority' parameter
+  try {
+    final token = await _getToken();
+    if (token == null) {
+      print('No token found. Please log in.');
       return {
         'success': false,
-        'message': 'An error occurred while adding the task.',
+        'message': 'User not authenticated.',
       };
     }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/tasks/add'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'taskName': taskName,
+        'taskDetails': taskDetails,
+        'deadline': deadline,
+        'type': type,
+        'taskPriority': taskPriority,  // Added 'taskPriority' to the body
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Task added successfully
+      print('Task added successfully.');
+      return {
+        'success': true,
+        'message': data['message'],
+      };
+    } else {
+      // Failed to add task
+      print('Failed to add task: ${data['message']}');
+      return {
+        'success': false,
+        'message': data['message'],
+      };
+    }
+  } catch (e) {
+    print('Error while adding task: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while adding the task.',
+    };
   }
+}
 
   // Method to update a task (protected route)
   Future<Map<String, dynamic>> updateTask(int taskId, String taskName, String taskDetails, String deadline, String status, String type) async {
@@ -315,6 +321,65 @@ class ApiService {
       return {
         'success': false,
         'message': 'An error occurred while retrieving tasks.',
+      };
+    }
+  }
+  Future<Map<String, dynamic>> changePassword(
+      String currentPassword, String newPassword, String confirmNewPassword) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        print('No token found. Please log in.');
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      // Validate new passwords match
+      if (newPassword != confirmNewPassword) {
+        return {
+          'success': false,
+          'message': 'New passwords do not match.',
+        };
+      }
+
+      // Prepare the request
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/users/change_password'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+          'confirmNewPassword': confirmNewPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // Password changed successfully
+        print('Password updated successfully.');
+        return {
+          'success': true,
+          'message': data['message'],
+        };
+      } else {
+        // Failed to change password
+        print('Failed to update password: ${data['message']}');
+        return {
+          'success': false,
+          'message': data['message'],
+        };
+      }
+    } catch (e) {
+      print('Error while changing password: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while updating the password.',
       };
     }
   }
