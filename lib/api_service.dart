@@ -454,48 +454,49 @@ Future<Map<String, dynamic>> addActivity(
       };
     }
   }
-Future<Map<String, dynamic>> getUserDetails() async {
-  try {
-    final token = await _getToken();
-    if (token == null) {
-      print('No token found. Please log in.');
+  Future<Map<String, dynamic>> getUserDetails() async {
+    try {
+      final token = await storage.read(key: 'jwt_token');
+      if (token == null) {
+        print('Error: Token is null.');
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      print('Token: $token');
+      print('Requesting user details...');
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/users/me'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'user': data['user'],
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Error fetching user data.',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
       return {
         'success': false,
-        'message': 'User not authenticated.',
+        'message': 'An error occurred while retrieving user data.',
       };
     }
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/users/me'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      // User data retrieved successfully
-      print('User data retrieved successfully.');
-      return {
-        'success': true,
-        'user': data['user'],
-      };
-    } else {
-      // Failed to get user data
-      print('Failed to get user data: ${data['message']}');
-      return {
-        'success': false,
-        'message': data['message'],
-      };
-    }
-  } catch (e) {
-    print('Error while retrieving user data: $e');
-    return {
-      'success': false,
-      'message': 'An error occurred while retrieving user data.',
-    };
   }
-}
 }
