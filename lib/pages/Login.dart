@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
                   // Email field
                   TextField(
                     controller: emailController,
+
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       labelStyle: TextStyle(color: Colors.white),
@@ -90,7 +91,8 @@ class _LoginState extends State<Login> {
                   // Password field
                   TextField(
                     controller: passwordController,
-                    decoration: InputDecoration(
+
+                    decoration: const InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
@@ -99,18 +101,9 @@ class _LoginState extends State<Login> {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
-                      suffix: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/forget');
-                        },
-                        child: Text(
-                          'Forgot?',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
                     ),
                     obscureText: true,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               ),
@@ -124,11 +117,11 @@ class _LoginState extends State<Login> {
                       if (emailController.text.isEmpty ||
                           passwordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Please fill all fields')),
+                          const SnackBar(content: Text('Please fill all fields')),
                         );
                         return;
                       }
+
 
                       // Show loading indicator
                       setState(() => isLoading = true);
@@ -138,14 +131,13 @@ class _LoginState extends State<Login> {
                         Map<String, dynamic> result = await api.login(
                           emailController.text,
                           passwordController.text,
+
                         );
 
                         if (result['success']) {
                           // Login successful
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    result['message'] ?? 'Login successful!')),
+                            SnackBar(content: Text(result['message'] ?? 'Login successful!')),
                           );
 
                           // Access user data if needed
@@ -157,17 +149,13 @@ class _LoginState extends State<Login> {
                         } else {
                           // Login failed
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text(result['message'] ?? 'Login failed')),
+                            SnackBar(content: Text(result['message'] ?? 'Login failed')),
                           );
                         }
                       } catch (e) {
                         // Handle any errors
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('An error occurred. Please try again.')),
+                          const SnackBar(content: Text('An error occurred. Please try again.')),
                         );
                       } finally {
                         // Hide loading indicator
@@ -189,6 +177,7 @@ class _LoginState extends State<Login> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
+
                     ),
                   ),
             // Link to signup page

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RecommendationsPage extends StatefulWidget {
-  const RecommendationsPage({super.key});
-
   @override
   State<RecommendationsPage> createState() => _RecommendationsPageState();
 }
 class _RecommendationsPageState extends State<RecommendationsPage> {
   // Colors for each section
   final Map<String, Color> sectionColors = {
-    "Task Management": const Color(0xFF283c64),
-    "Sleep Recommendations": const Color(0xFF386454),
-    "Productivity Recommendations": const Color(0xFF702c54),
+    "Task Management": Color(0xFF283c64),
+    "Sleep Recommendations": Color(0xFF386454),
+    "Productivity Recommendations": Color(0xFF702c54),
 
   };
 
@@ -23,7 +21,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
         backgroundColor: const Color(0xFF24282e),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pushNamed(context, '/taskspage');
           },
@@ -38,7 +36,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "Hello She",
                     style: TextStyle(
                       color: Colors.white,
@@ -54,7 +52,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                   ),
                 ],
               ),
-              const Text(
+              Text(
                 "Here It's\nYour Recommendations",
                 style: TextStyle(
                   color: Colors.greenAccent,
@@ -63,7 +61,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
                   fontFamily: 'AbhayaLibre',
                 ),
               ),
-              const SizedBox(height: 5),
+              SizedBox(height: 5),
               _buildSection("Task Management", [
                 "You have a high-priority task due tomorrow. Consider completing it today to avoid last-minute stress.",
                 "You haven't scheduled time for task X this week. Add it to your schedule to stay on track.",
@@ -90,7 +88,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionTitle(title),
-        ...recommendations.map((text) => _buildRecommendationCard(text, color: color)),
+        ...recommendations.map((text) => _buildRecommendationCard(text, color: color)).toList(),
       ],
     );
   }
@@ -98,7 +96,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -109,15 +107,15 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
 
   Widget _buildRecommendationCard(String text, {Color color = const Color(0xFF283c64)}) {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(15),
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
           fontSize: 15,
           fontFamily: 'AbhayaLibre',

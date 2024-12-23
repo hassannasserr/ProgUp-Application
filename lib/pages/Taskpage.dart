@@ -4,8 +4,6 @@ import 'package:srs_app/Widgets/taskwidget.dart';
 import 'package:srs_app/api_service.dart';
 
 class TasksPage extends StatefulWidget {
-  const TasksPage({super.key});
-
   @override
   _TasksPageState createState() => _TasksPageState();
 }

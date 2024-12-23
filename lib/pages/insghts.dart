@@ -31,7 +31,7 @@ class _insightsState extends State<Insights> {
       body: 
          ListView(
           padding: const EdgeInsets.all(15),
-          children: const [
+          children: [
             SleepInsightWidget(),
             SizedBox(height: 10,),
             SocialActivityInsightWidget(),
