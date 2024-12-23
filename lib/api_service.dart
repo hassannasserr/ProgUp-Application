@@ -506,5 +506,3 @@ Future<Map<String, dynamic>> getUserDetails() async {
   }
 
 }
-
-}
