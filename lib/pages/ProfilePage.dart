@@ -217,7 +217,7 @@ class _ProfileFieldState extends State<ProfileField> {
         readOnly: true,
         decoration: InputDecoration(
           //change text color
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             color: Colors.white,
           ),
           prefixIcon: Icon(widget.icon),

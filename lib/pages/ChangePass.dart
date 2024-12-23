@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:srs_app/api_service.dart';
 
 class ChangePass extends StatefulWidget {
-  const ChangePass({Key? key}) : super(key: key);
+  const ChangePass({super.key});
 
   @override
   State<ChangePass> createState() => _ChangePassState();
@@ -134,10 +134,10 @@ class TransparentField extends StatelessWidget {
   final TextEditingController controller;
 
   const TransparentField({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -166,11 +166,11 @@ class ChangeButton extends StatelessWidget {
   final TextEditingController confirmNewPasswordController;
 
    ChangeButton({
-    Key? key,
+    super.key,
     required this.currentPasswordController,
     required this.newPasswordController,
     required this.confirmNewPasswordController,
-  }) : super(key: key);
+  });
 
   // Initialize ApiService
   final ApiService apiService = ApiService();
@@ -244,7 +244,7 @@ class ChangeButton extends StatelessWidget {
 }
 
 class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  const BottomNavBar({super.key});
 
   void _navigateTo(BuildContext context, String label) {
     if (label == 'Home') {
@@ -313,12 +313,12 @@ class BottomNavItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const BottomNavItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.isActive = false,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

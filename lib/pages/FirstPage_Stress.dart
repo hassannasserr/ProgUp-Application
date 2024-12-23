@@ -4,6 +4,8 @@ import 'package:srs_app/api_service.dart';
 
 
 class SocialActivityPage extends StatefulWidget {
+  const SocialActivityPage({super.key});
+
   @override
   State<SocialActivityPage> createState() => _SocialActivityPageState();
 }
