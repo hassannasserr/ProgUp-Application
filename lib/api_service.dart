@@ -505,4 +505,77 @@ Future<Map<String, dynamic>> getUserDetails() async {
     }
   }
 
+  // Method to call the /api/predict endpoint
+  Future<Map<String, dynamic>> getPredictions() async {
+    try {
+      final token = await _getToken();
+
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/predict'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['success']) {
+          // Check if 'action_required' is present
+          if (data.containsKey('action_required')) {
+            return {
+              'success': true,
+              'message': data['message'],
+              'action_required': data['action_required'],
+              'predicted_tasks_finished': data['predicted_tasks_finished'],
+              'predicted_study_hours_per_day': data['predicted_study_hours_per_day'],
+              // Depending on the action_required, retrieve the appropriate tasks
+              'tasks_available': data['tasks_available'],
+            };
+          } else {
+            // No action required, tasks are ready to be scheduled
+            return {
+              'success': true,
+              'message': data['message'],
+              'tasks_to_schedule': data['tasks_to_schedule'],
+              'predicted_tasks_finished': data['predicted_tasks_finished'],
+              'predicted_study_hours_per_day': data['predicted_study_hours_per_day'],
+            };
+          }
+        } else {
+          // The API returned success: false
+          return {
+            'success': false,
+            'message': data['message'],
+          };
+        }
+      } else if (response.statusCode == 400) {
+        final data = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': data['message'],
+        };
+      } else {
+        return {
+          'success': false,
+          'message': 'Server error: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      print('Error in getPredictions: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while fetching predictions.',
+      };
+    }
+  }
+
 }
