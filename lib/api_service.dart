@@ -548,7 +548,7 @@ Future<Map<String, dynamic>> getUserDetails() async {
           'success': false,
           'message': data['message'],
           'predicted_tasks_finished': data['predicted_tasks_finished'],
-          'predicted_study_hours': data.get('predicted_study_hours'),
+          'predicted_study_hours': data['predicted_study_hours'],
           'action_required': actionRequired,
         };
       }
