@@ -17,8 +17,77 @@ class _TasksPageState extends State<TasksPage> {
     super.initState();
     _loadTasks();
   }
-
   Future<void> _loadTasks() async {
+    final apiService = ApiService();
+    final response = await apiService.createSchedule();
+
+    if (response['success'] == true) {
+      setState(() {
+        TaskData.alltasks = (response['tasks_scheduled']!=null?response['tasks_scheduled'] as List:[]).map((task) {
+          Color taskColor;
+          switch (task['Type']) {
+            case 'Study':
+              taskColor = Colors.blue;
+              break;
+            case 'Social':
+              taskColor = Colors.green;
+              break;
+            case 'Work':
+              taskColor = Colors.red;
+              break;
+            default:
+              taskColor = Colors.grey;
+          }
+
+          // Ensure task['id'] is not null and is a valid integer
+          int taskId = task['TaskID'] != null
+              ? int.tryParse(task['TaskID'].toString()) ?? 0
+              : 0;
+          print("Task ID: $taskId");
+
+          // Ensure task['name'] is not null and is a valid string
+          String taskName = task['TaskName'] != null
+              ? task['TaskName'].toString()
+              : 'Unnamed Task';
+          print("Task Name: $taskName");
+
+          // Ensure task['description'] is not null and is a valid string
+          String taskDescription =
+              task['TaskDetails'] != null ? task['TaskDetails'].toString() : '';
+          print("Task Description: $taskDescription");
+
+          // Ensure task['priority'] is not null and is a valid integer
+          int taskPriority = task['Taskpriority'] != null
+              ? int.tryParse(task['Taskpriority'].toString()) ?? 0
+              : 0;
+          print("Task Priority: $taskPriority");
+
+          // Ensure task['type'] is not null and is a valid string
+          String taskType = task['Type'] != null ? task['Type'].toString() : '';
+          print("Task Type: $taskType");
+
+          return TaskItem(
+            taskId,
+            taskName,
+            taskDescription,
+            taskPriority,
+            taskType,
+            color: taskColor,
+          );
+        }).toList();
+        
+        print("All Tasks: ${TaskData.alltasks}");
+        isLoading = false;
+       
+      });
+       } else {
+      print("Error: ${response['message']}");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+ /* Future<void> _loadTasks() async {
     final apiService = ApiService(); // Assuming this is the service with the function
     final response = await apiService.getTasks();
 
@@ -80,7 +149,7 @@ class _TasksPageState extends State<TasksPage> {
         isLoading = false;
       });
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +198,9 @@ class _TasksPageState extends State<TasksPage> {
                             builder: (BuildContext context) {
                               return const AddTaskDialog();
                             },
-                          );
+                          ).then((_) {
+                            _loadTasks(); // Reload tasks after adding a new task
+                          });
                         },
                         icon: const Icon(Icons.add, color: Colors.white),
                         label: const Text(
@@ -192,22 +263,24 @@ class _TasksPageState extends State<TasksPage> {
                   ),
                 ),
                 // قائمة المهام
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: TaskData.alltasks.length,
-                  itemBuilder: (context, index) {
-                    late TaskItem task;
-                    task = TaskData.alltasks[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: TaskContainer(
-                        taskName: task.name,
-                        color: task.color,
+                isLoading
+                    ? const CircularProgressIndicator()
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: TaskData.alltasks.length,
+                        itemBuilder: (context, index) {
+                          late TaskItem task;
+                          task = TaskData.alltasks[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: TaskContainer(
+                              taskName: task.name,
+                              color: task.color,
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                )
 
                 // شريط التنقل السفلي
               ],
@@ -535,7 +608,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: const Text('Cancel',
                       style: TextStyle(color: Colors.white)),
@@ -556,9 +631,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
                       if (response['success']) {
                         // Task added successfully
+                        await _updateTasks();
                         Navigator.of(context).pop();
-                      } else {
-                        // Handle the error
+                      } else {                        // Handle the error
                         print('Failed to add task: ${response['message']}');
                       }
                     }
@@ -571,5 +646,70 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         ),
       ),
     );
+  }
+  Future<void> _updateTasks() async {
+    final apiService = ApiService();
+    final response = await apiService.createSchedule();
+
+    if (response['success'] == true) {
+      setState(() {
+        TaskData.alltasks = (response['tasks_scheduled']!=null?response['tasks_scheduled'] as List:[]).map((task) {
+          Color taskColor;
+          switch (task['Type']) {
+            case 'Study':
+              taskColor = Colors.blue;
+              break;
+            case 'Social':
+              taskColor = Colors.green;
+              break;
+            case 'Work':
+              taskColor = Colors.red;
+              break;
+            default:
+              taskColor = Colors.grey;
+          }
+
+          // Ensure task['id'] is not null and is a valid integer
+          int taskId = task['TaskID'] != null
+              ? int.tryParse(task['TaskID'].toString()) ?? 0
+              : 0;
+          print("Task ID: $taskId");
+
+          // Ensure task['name'] is not null and is a valid string
+          String taskName = task['TaskName'] != null
+              ? task['TaskName'].toString()
+              : 'Unnamed Task';
+          print("Task Name: $taskName");
+
+          // Ensure task['description'] is not null and is a valid string
+          String taskDescription =
+              task['TaskDetails'] != null ? task['TaskDetails'].toString() : '';
+          print("Task Description: $taskDescription");
+
+          // Ensure task['priority'] is not null and is a valid integer
+          int taskPriority = task['Taskpriority'] != null
+              ? int.tryParse(task['Taskpriority'].toString()) ?? 0
+              : 0;
+          print("Task Priority: $taskPriority");
+
+          // Ensure task['type'] is not null and is a valid string
+          String taskType = task['Type'] != null ? task['Type'].toString() : '';
+          print("Task Type: $taskType");
+
+          return TaskItem(
+            taskId,
+            taskName,
+            taskDescription,
+            taskPriority,
+            taskType,
+            color: taskColor,
+          );
+        }).toList();
+        
+        print("All Tasks: ${TaskData.alltasks}");
+       
+      });
+    } else {print("Error: ${response['message']}");
+    }
   }
 }

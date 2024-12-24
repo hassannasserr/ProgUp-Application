@@ -106,7 +106,7 @@ class _TaskspageState extends State<HomePage> {
               const SizedBox(height: 70),
               // Greeting Text
               const Text(
-                "Hello Abdo",
+                "Hello Dear ",
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.grey,

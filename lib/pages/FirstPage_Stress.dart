@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:srs_app/api_service.dart';
+import 'package:srs_app/Widgets/taskwidget.dart';
 
 class SocialActivityPage extends StatefulWidget {
   @override
@@ -19,11 +20,13 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
 
     final int sleepHour = args?['sleepHour'] ?? 8; // Default to 8 if null
     final int sleepMinute = args?['sleepMinute'] ?? 0; // Default to 0 if null
-    final String sleepPeriod = args?['sleepPeriod'] ?? 'AM'; // Default to 'AM' if null
+    final String sleepPeriod =
+        args?['sleepPeriod'] ?? 'AM'; // Default to 'AM' if null
 
     final int wakeUpHour = args?['wakeUpHour'] ?? 7; // Default to 7 if null
     final int wakeUpMinute = args?['wakeUpMinute'] ?? 0; // Default to 0 if null
-    final String wakeUpPeriod = args?['wakeUpPeriod'] ?? 'AM'; // Default to 'AM' if null
+    final String wakeUpPeriod =
+        args?['wakeUpPeriod'] ?? 'AM'; // Default to 'AM' if null
 
     String formatTime(int hour, int minute, String period) {
       return '$hour:${minute.toString().padLeft(2, '0')} $period';
@@ -44,16 +47,16 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
 
     // Labels for stress levels
     final List<String> stressLabels = [
-      'Stressed',   // Stressed
-      'Calm',       // Calm
-      'Motivated',  // Motivated
+      'Stressed', // Stressed
+      'Calm', // Calm
+      'Motivated', // Motivated
     ];
 
     // Map for mapping user selection to stress levels
     final Map<int, String> stressMap = {
-      0: "High",      // Stressed -> High
-      1: "Moderate",  // Calm -> Moderate
-      2: "Low",       // Motivated -> Low
+      0: "High", // Stressed -> High
+      1: "Moderate", // Calm -> Moderate
+      2: "Low", // Motivated -> Low
     };
 
     return Scaffold(
@@ -78,7 +81,7 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
                 // Display image based on stress level
                 Image.asset(
                   stressImages[stressLevel],
-                  width: 100, 
+                  width: 100,
                   height: 100,
                 ),
                 const SizedBox(height: 10),
@@ -160,7 +163,8 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF46AF62),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -168,7 +172,8 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
               onPressed: () async {
                 // Use the stressMap to get the appropriate stress level text
                 String selectedStressLevel = stressMap[stressLevel] ?? "Low";
-                print("Social Hours: $socialHours, Stress Level: $selectedStressLevel");
+                print(
+                    "Social Hours: $socialHours, Stress Level: $selectedStressLevel");
 
                 final result = await api.addActivity(
                   asleepTime,
@@ -178,10 +183,155 @@ class _SocialActivityPageState extends State<SocialActivityPage> {
                 );
 
                 if (result['success']) {
-                  Navigator.pushNamed(context, '/homepage');
+                  final predictions = await api.createSchedule();
+
+                  if (predictions['success']) {
+                    bool isLoading = true;
+                    setState(() {
+                      TaskData.alltasks =
+                          (predictions['tasks_scheduled'] as List).map((task) {
+                        Color taskColor;
+                        switch (task['Type']) {
+                          case 'Study':
+                            taskColor = Colors.blue;
+                            break;
+                          case 'Social':
+                            taskColor = Colors.green;
+                            break;
+                          case 'Work':
+                            taskColor = Colors.red;
+                            break;
+                          default:
+                            taskColor = Colors.grey;
+                        }
+
+                        // Ensure task['TaskID'] is not null and is a valid integer
+                        int taskId = task['TaskID'] != null
+                            ? int.tryParse(task['TaskID'].toString()) ?? 0
+                            : 0;
+                        print("Task ID: $taskId");
+
+                        // Ensure task['TaskName'] is not null and is a valid string
+                        String taskName = task['TaskName'] != null
+                            ? task['TaskName'].toString()
+                            : 'Unnamed Task';
+                        print("Task Name: $taskName");
+
+                        // Ensure task['TaskDetails'] is not null and is a valid string
+                        String taskDescription = task['TaskDetails'] != null
+                            ? task['TaskDetails'].toString()
+                            : '';
+                        print("Task Description: $taskDescription");
+
+                        // Ensure task['Taskpriority'] is not null and is a valid integer
+                        int taskPriority = task['Taskpriority'] != null
+                            ? int.tryParse(task['Taskpriority'].toString()) ?? 0
+                            : 0;
+                        print("Task Priority: $taskPriority");
+
+                        // Ensure task['Type'] is not null and is a valid string
+                        String taskType =
+                            task['Type'] != null ? task['Type'].toString() : '';
+                        print("Task Type: $taskType");
+
+                        return TaskItem(
+                          taskId,
+                          taskName,
+                          taskDescription,
+                          taskPriority,
+                          taskType,
+                          color: taskColor,
+                        );
+                      }).toList();
+                      isLoading = false;
+                    });
+
+                    // Show the predicted tasks finished in a dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Predictions"),
+                          content: Text(
+                              "Number of Predicted Tasks Finished: ${predictions['predicted_tasks_finished']}"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.pushNamed(context, '/homepage');
+                              },
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (predictions['action_required'] == 'add_tasks') {
+                    // Handle the case where no tasks are available to schedule
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("No Tasks Available"),
+                          content: Text(
+                              "the number of tasks you can do is ${predictions['predicted_tasks_finished']} You have no tasks to schedule. Would you like to add tasks?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.pushNamed(context, '/taskspage');
+                              },
+                              child: const Text("Add Tasks"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    // Handle other errors
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Error"),
+                          content: Text(predictions['message']),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 } else {
                   // Handle error (e.g., show a dialog with the error message)
-                  print(result['message']);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Error"),
+                        content: Text(result['message']),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               child: const Text(

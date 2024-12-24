@@ -107,77 +107,81 @@ class _LoginState extends State<Login> {
             isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
                 : ElevatedButton(
-                    onPressed: () async {
-                      // Basic validation
-                      if (emailController.text.isEmpty ||
-                          passwordController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Please fill all fields')),
-                        );
-                        return;
-                      }
+                  onPressed: () async {
+                    // Basic validation
+                    if (emailController.text.isEmpty ||
+                      passwordController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please fill all fields')),
+                    );
+                    return;
+                    }
 
-                      // Show loading indicator
-                      setState(() => isLoading = true);
+                    // Show loading indicator
+                    setState(() => isLoading = true);
 
-                      try {
-                        // Try to login
-                        Map<String, dynamic> result = await api.login(
-                          emailController.text,
-                          passwordController.text,
-                        );
+                    try {
+                    // Try to login
+                    Map<String, dynamic> result = await api.login(
+                      emailController.text,
+                      passwordController.text,
+                    );
 
-                        if (result['success']) {
-                          // Login successful
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    result['message'] ?? 'Login successful!')),
-                          );
+                    if (result['success']) {
+                      // Login successful
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          result['message'] ?? 'Login successful!')),
+                      );
 
-                          // Access user data if needed
-                          Map<String, dynamic> userData = result['user'];
-                          // You can store userData locally if necessary
+                      // Access user data if needed
+                       Map<String, dynamic> userData = result['user'];
+                       bool firstLoginToday = result['firstLoginToday'];
 
-                          // Navigate to tasks page
-                          Navigator.pushReplacementNamed(context, '/sleep');
-                        } else {
-                          // Login failed
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text(result['message'] ?? 'Login failed')),
-                          );
-                        }
-                      } catch (e) {
-                        // Handle any errors
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('An error occurred. Please try again.')),
-                        );
-                      } finally {
-                        // Hide loading indicator
-                        setState(() => isLoading = false);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF384454),
-                      minimumSize: const Size(360, 50),
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      // Navigate based on firstLoginToday attribute
+                     if (firstLoginToday) {
+      Navigator.pushReplacementNamed(context, '/sleep');
+    } else {
+      Navigator.pushReplacementNamed(context, '/homepage');
+    }
+                    } else {
+                      // Login failed
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                          Text(result['message'] ?? 'Login failed')),
+                      );
+                    }
+                    } catch (e) {
+                    // Handle any errors
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                          Text('An error occurred. Please try again.')),
+                    );
+                    } finally {
+                    // Hide loading indicator
+                    setState(() => isLoading = false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF384454),
+                    minimumSize: const Size(360, 50),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                     ),
+                  ),
                   ),
             // Link to signup page
             Row(
