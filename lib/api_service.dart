@@ -508,62 +508,68 @@ Future<Map<String, dynamic>> getUserDetails() async {
     }
   }
 
-  Future<Map<String, dynamic>> createSchedule() async {
-    try {
-      final token = await _getToken();
+ Future<Map<String, dynamic>> createSchedule() async {
+  try {
+    final token = await _getToken();
 
-      if (token == null) {
-        return {
-          'success': false,
-          'message': 'User not authenticated.',
-        };
-      }
-
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/predict'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data['success']) {
-          // Schedule created successfully
-          return {
-            'success': true,
-            'message': data['message'],
-            'schedule': data['schedule'], // Contains schedule details
-            'tasks_scheduled': data['tasks_scheduled'], // List of task details
-          };
-        } else {
-          // Handle cases where action is required
-          String actionRequired = data['action_required'] ?? '';
-          return {
-            'success': false,
-            'message': data['message'],
-            'action_required': actionRequired,
-          };
-        }
-      } else {
-        // Handle other status codes
-        return {
-          'success': false,
-          'message': 'Server error: ${response.statusCode}',
-        };
-      }
-    } catch (e) {
-      print('Error in createSchedule: $e');
+    if (token == null) {
       return {
         'success': false,
-        'message': 'An error occurred while creating the schedule.',
+        'message': 'User not authenticated.',
       };
     }
-  }
 
-  // Method to call the /api/get_schedule endpoint
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/predict'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      if (data['success'] == true) {
+        // Schedule created successfully
+        return {
+          'success': true,
+          'message': data['message'],
+          'predicted_tasks_finished': data['predicted_tasks_finished'],
+          'predicted_study_hours': data['predicted_study_hours'],
+          'schedule': data['schedule'], // Contains schedule details
+          'tasks_scheduled': data['tasks_scheduled'], // List of task details
+        };
+      } else {
+        // Handle cases where action is required or when no tasks are available
+        String actionRequired = data['action_required'] ?? '';
+
+        return {
+          'success': false,
+          'message': data['message'],
+          'predicted_tasks_finished': data['predicted_tasks_finished'],
+          'predicted_study_hours': data.get('predicted_study_hours'),
+          'action_required': actionRequired,
+        };
+      }
+    } else {
+      // Handle other status codes
+      return {
+        'success': false,
+        'message': 'Server error: ${response.statusCode}',
+        'predicted_tasks_finished': null,
+      };
+    }
+  } catch (e) {
+    print('Error in createSchedule: $e');
+    return {
+      'success': false,
+      'message': 'An error occurred while creating the schedule.',
+      'predicted_tasks_finished': null,
+    };
+  }
+}
+ // Method to call the /api/get_schedule endpoint
   Future<Map<String, dynamic>> getSchedule() async {
     try {
       final token = await _getToken();
