@@ -54,7 +54,14 @@ class MyApp extends StatelessWidget {
         '/changepass': (context) => const ChangePass(),
         '/insights': (context) => const Insights(),
         '/taskspage':(context)=> TasksPage(),
-        '/recommendations':(context)=> RecommendationsPage(),
+
+        '/recommendations':(context)=>const RecommendationsPage(
+          sleepAverage: 'Moderate',
+          socialAverage: 'Moderate',
+          studyAverage: 'Moderate',
+          physicalAverage: 'Moderate',
+        ),
+
         '/stresspage':(context)=> SocialActivityPage(),
         '/forget':(context)=>ForgotPasswordScreen(),
         '/verify':(context)=>VerifyEmailScreen(),

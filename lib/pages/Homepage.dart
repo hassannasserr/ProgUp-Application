@@ -12,12 +12,39 @@ class HomePage extends StatefulWidget {
 class _TaskspageState extends State<HomePage> {
   bool isLoading = true;
   int tasklength = 0;
+  String userName = '';
+
   @override
   void initState() {
     super.initState();
     _loadTasks();
+    _fetchUserDetails();
     
   }
+    final ApiService api = ApiService();
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      final userDetails = await api.getUserDetails();
+      print(userDetails);
+
+      if (userDetails != null && userDetails['success']) {
+        setState(() {
+          userName = userDetails['user']?['Fname'] + ' ' + userDetails['user']?['Lname'] ?? 'No name';
+        });
+      } else {
+        setState(() {
+          userName = 'Error loading name';
+        });
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+      setState(() {
+        userName = 'Error';
+      });
+    }
+  }
+
 
   Future<void> _loadTasks() async {
     final apiService =
@@ -105,9 +132,9 @@ class _TaskspageState extends State<HomePage> {
             children: [
               const SizedBox(height: 70),
               // Greeting Text
-              const Text(
-                "Hello Dear ",
-                style: TextStyle(
+             Text(
+                "Hello $userName",
+                style: const TextStyle(
                   fontSize: 25,
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,

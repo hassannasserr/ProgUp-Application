@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:srs_app/Widgets/taskwidget.dart';
+import 'package:srs_app/api_service.dart';
 
 class Pomodoro extends StatefulWidget {
   const Pomodoro({super.key});
@@ -10,9 +11,9 @@ class Pomodoro extends StatefulWidget {
 }
 
 class _PomodoroState extends State<Pomodoro> {
-  double sessionTime = 25;
-  double breakTime = 5;
-  double longBreakTime = 15;
+  double sessionTime = 50;
+  double breakTime = 10;
+  double longBreakTime = 20;
   int sessionCount = 4; // Default session count for long break
   int completedSessions = 0;
 
@@ -102,17 +103,16 @@ class _PomodoroState extends State<Pomodoro> {
                   ),
                   Slider(
                     value: sessionTime,
-                    min: 5,
+                    min: 25,
                     max: 120,
-                    divisions: 115,
+                    divisions: 95,
                     label: sessionTime.toStringAsFixed(0),
                     onChanged: (value) {
                       setDialogState(() {
                         sessionTime = value;
                       });
                       setState(() {
-                        remainingTime =
-                            Duration(minutes: sessionTime.toInt());
+                        remainingTime = Duration(minutes: sessionTime.toInt());
                       });
                     },
                   ),
@@ -165,8 +165,8 @@ class _PomodoroState extends State<Pomodoro> {
                       ),
                       Text(
                         sessionCount.toString(),
-                        style: const TextStyle(
-                            fontSize: 25, color: Colors.white),
+                        style:
+                            const TextStyle(fontSize: 25, color: Colors.white),
                       ),
                       IconButton(
                         onPressed: () {
@@ -202,85 +202,57 @@ class _PomodoroState extends State<Pomodoro> {
     );
   }
 
+  // Variables to store selected task name and color
+  String selectedTaskName = "Select Task";
+  Color selectedTaskColor = const Color(0xff49B583); // Default green color
 
-void selecttask() {
-  String? selectedTask; 
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setDialogState) {
-          return AlertDialog(
-            backgroundColor: const Color(0xFF384454),
-            title: const Text(
-              "Select a Task",
-              style: TextStyle(color: Colors.white),
-            ),
-            content: SizedBox(
-              height: 300,
-              width: 300,
-              child: ListView.builder(
-              //shrinkWrap: true,
-              //physics: const NeverScrollableScrollPhysics(),
-              itemCount: TaskData.alltasks.length,
-              itemBuilder: (context, index) {
-                late TaskItem task;
-                task = TaskData.alltasks[index];
-                return GestureDetector(
-                  onTap: () {
-                    setDialogState(() {
-                      selectedTask = task.name; // Save the selected task
-                    });
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: TaskContainer(
-                      taskName: task.name,
-                      color: task.color,
-                    ),
-                  ),
-                );
-              },
-            ),
-            ),
-            actions: [
-              TextButton(
+  // Function to select task type (study or physical)
+  void selectType() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF384454),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
                 onPressed: () {
+                  setState(() {
+                    selectedTaskName = "Study";
+                    selectedTaskColor = Colors.green; // Study button color
+                  });
                   Navigator.of(context).pop();
                 },
-                child: const Text(
-                  "Close",
-                  style: TextStyle(color: Colors.white),
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text("Study", style: TextStyle(color: Colors.white)),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedTaskName = "Physical";
+                    selectedTaskColor = Colors.blue; // Physical button color
+                  });
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: const Text("Physical", style: TextStyle(color: Colors.white)),
               ),
             ],
-          );
-        },
-      );
-    },
-  ).then((_) {
-    if (selectedTask != null) {
-      setState(() {
-        print("Selected Task: $selectedTask");
-        // Update state with selected task if needed
-      });
-    }
-  });
-}
-
-
-
-
-  
-
+          ),
+        );
+      },
+    );
+  }
 
   Color getTimerColor() {
     if (isSession) {
       return Colors.grey; // Session: Red
     } else {
-      return (completedSessions == 0) ? Colors.yellow : Colors.blue; // Long Break: Yellow, Short Break: Blue
+      return (completedSessions == 0)
+          ? Colors.yellow
+          : Colors.blue; // Long Break: Yellow, Short Break: Blue
     }
   }
 
@@ -384,13 +356,14 @@ void selecttask() {
             ),
             const SizedBox(height: 70),
             ElevatedButton(
-              onPressed: selecttask,
+              onPressed: selectType,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff49B583),
+                backgroundColor:
+                    selectedTaskColor, // Use the selected task's color
               ),
-              child: const Text(
-                "Select Task",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+              child: Text(
+                selectedTaskName, // Use the selected task's name
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
           ],
@@ -398,8 +371,4 @@ void selecttask() {
       ),
     );
   }
-}
-
-extension on void Function() {
-  get length => null;
 }

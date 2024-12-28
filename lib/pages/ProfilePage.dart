@@ -180,7 +180,8 @@ class _ProfilepageState extends State<Profilepage> {
                     const SizedBox(height: 20),
                     OutlinedButton(
                       onPressed: () {
-                        // Handle logout functionality
+                        //navigate to start page
+                        Navigator.pushNamed(context, '/Startpage');
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.red),
