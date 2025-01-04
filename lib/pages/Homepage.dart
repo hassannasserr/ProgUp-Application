@@ -49,7 +49,7 @@ class _TaskspageState extends State<HomePage> {
   Future<void> _loadTasks() async {
     final apiService =
         ApiService(); // Assuming this is the service with the function
-    final response = await apiService.getTasks();
+    final response = await apiService.getSchedule();
 
     if (response['success'] == true) {
       // Print the retrieved data
@@ -61,10 +61,10 @@ class _TaskspageState extends State<HomePage> {
             case 'Study':
               taskColor = Colors.blue;
               break;
-            case 'Social':
+            case 'Physical':
               taskColor = Colors.green;
               break;
-            case 'Work':
+            case 'Social':
               taskColor = Colors.red;
               break;
             default:
