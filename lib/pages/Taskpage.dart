@@ -283,6 +283,9 @@ class _TasksPageState extends State<TasksPage> {
                                   TaskData.alltasks.removeAt(index);
                                 });
                               },
+                              onClose: () {
+                                // Add your onClose logic here
+                              },
                             ),
                           );
                         },

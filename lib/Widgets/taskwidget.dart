@@ -6,6 +6,7 @@ class TaskContainer extends StatelessWidget {
   final Color color;
   final int taskid;
   final Function onDelete;
+  final Function onClose;
 
   TaskContainer({
     super.key,
@@ -13,8 +14,11 @@ class TaskContainer extends StatelessWidget {
     required this.color,
     required this.taskid,
     required this.onDelete,
+    required this.onClose,
   });
+
   final ApiService api = ApiService();
+
   Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -63,6 +67,24 @@ class TaskContainer extends StatelessWidget {
     );
   }
 
+  Future<void> _closeTask(BuildContext context) async {
+    final result = await api.closeTask(taskid);
+    if (result['success']) {
+      onClose(taskid);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -101,7 +123,7 @@ class TaskContainer extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  print('Done $taskName');
+                  _closeTask(context);
                 },
                 icon: const Icon(
                   Icons.circle_outlined,
@@ -154,6 +176,13 @@ class _TaskListViewState extends State<TaskListView> {
     });
   }
 
+  void _closeTask(int taskId) {
+    setState(() {
+      final task = widget.tasks.firstWhere((task) => task.id == taskId);
+      task.color = Colors.green; // Change the color to indicate completion
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -167,6 +196,7 @@ class _TaskListViewState extends State<TaskListView> {
             color: task.color,
             taskid: task.id,
             onDelete: _deleteTask,
+            onClose: _closeTask,
           ),
         );
       },

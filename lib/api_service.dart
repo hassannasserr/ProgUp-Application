@@ -798,7 +798,7 @@ Future<Map<String, dynamic>> closeTask(int taskId) async {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         // Task closed successfully
         print('Task closed successfully.');
         return {
@@ -806,15 +806,17 @@ Future<Map<String, dynamic>> closeTask(int taskId) async {
           'message': data['message'],
         };
       } else {
-        // Failed to close task
-        print('Failed to close task: ${data['message']}');
-        return {
-          'success': false,
-          'message': data['message'],
-        };
-      }
-    } catch (e) {
+      // Failed to close task
+      print('Failed to close task: ${data['message']}');
+      print('Status code: ${response.statusCode}');
+      return {
+        'success': false,
+        'message': data['message'] ?? 'Failed to close task with status code ${response.statusCode}.',
+      };
+    }
+    } catch (e,stackTrace) {
       print('Error while closing task: $e');
+      print('Stack trace: $stackTrace');
       return {
         'success': false,
         'message': 'An error occurred while closing the task.',
