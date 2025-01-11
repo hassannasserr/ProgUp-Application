@@ -47,77 +47,84 @@ class _TaskspageState extends State<HomePage> {
 
 
   Future<void> _loadTasks() async {
-    final apiService =
-        ApiService(); // Assuming this is the service with the function
-    final response = await apiService.getTasks();
+  final apiService = ApiService(); // Assuming this is the service with the function
+  final response = await apiService.getSchedule();
+  print("API Response: $response"); // Debugging output
+  print('test');
+  print('rr');
+  if (response['success'] == true) {
+    // Print the retrieved data
+    print('object');
+    print("Tasks Data: ${response['tasks_scheduled']}");
+    setState(() {
+      TaskData.alltasks = (response['tasks_scheduled'] as List).map((task) {
+        // ... your existing code to parse each task ...
 
-    if (response['success'] == true) {
-      // Print the retrieved data
-      print("Tasks Data: ${response['tasks']}");
-      setState(() {
-        TaskData.alltasks = (response['tasks'] as List).map((task) {
-          Color taskColor;
-          switch (task['Type']) {
-            case 'Study':
-              taskColor = Colors.blue;
-              break;
-            case 'Social':
-              taskColor = Colors.green;
-              break;
-            case 'Work':
-              taskColor = Colors.red;
-              break;
-            default:
-              taskColor = Colors.grey;
-          }
+        // For example:
+        Color taskColor;
+        switch (task['Type']) {
+          case 'Study':
+            taskColor = Colors.blue;
+            break;
+          case 'Physical':
+            taskColor = Colors.green;
+            break;
+          case 'Social':
+            taskColor = Colors.red;
+            break;
+          default:
+            taskColor = Colors.grey;
+        }
 
-          // Ensure task['id'] is not null and is a valid integer
-          int taskId = task['TaskID'] != null
-              ? int.tryParse(task['TaskID'].toString()) ?? 0
-              : 0;
-          print("Task ID: $taskId");
+        // Ensure task['TaskID'] is not null and is a valid integer
+        int taskId = task['TaskID'] != null
+            ? int.tryParse(task['TaskID'].toString()) ?? 0
+            : 0;
+        print("Task ID: $taskId");
 
-          // Ensure task['name'] is not null and is a valid string
-          String taskName = task['TaskName'] != null
-              ? task['TaskName'].toString()
-              : 'Unnamed Task';
-          print("Task Name: $taskName");
+        // Ensure task['TaskName'] is not null and is a valid string
+        String taskName = task['TaskName'] != null
+            ? task['TaskName'].toString()
+            : 'Unnamed Task';
+        print("Task Name: $taskName");
 
-          // Ensure task['description'] is not null and is a valid string
-          String taskDescription =
-              task['TaskDetails'] != null ? task['TaskDetails'].toString() : '';
-          print("Task Description: $taskDescription");
+        // Ensure task['TaskDetails'] is not null and is a valid string
+        String taskDescription = task['TaskDetails'] != null
+            ? task['TaskDetails'].toString()
+            : '';
+        print("Task Description: $taskDescription");
 
-          // Ensure task['priority'] is not null and is a valid integer
-          int taskPriority = task['Taskpriority'] != null
-              ? int.tryParse(task['Taskpriority'].toString()) ?? 0
-              : 0;
-          print("Task Priority: $taskPriority");
+        // Ensure task['TaskPriority'] is not null and is a valid integer
+        int taskPriority = task['TaskPriority'] != null
+            ? int.tryParse(task['TaskPriority'].toString()) ?? 0
+            : 0;
+        print("Task Priority: $taskPriority");
 
-          // Ensure task['type'] is not null and is a valid string
-          String taskType = task['Type'] != null ? task['Type'].toString() : '';
-          print("Task Type: $taskType");
+        // Ensure task['Type'] is not null and is a valid string
+        String taskType = task['Type'] != null ? task['Type'].toString() : '';
+        print("Task Type: $taskType");
 
-          return TaskItem(
-            taskId,
-            taskName,
-            taskDescription,
-            taskPriority,
-            taskType,
-            color: taskColor,
-          );
-        }).toList();
-        tasklength = TaskData.alltasks.length;
-        print("All Tasks: ${TaskData.alltasks}");
-        isLoading = false;
-      });
-    } else {
-      print("Error: ${response['message']}"); // In case of an error
-      setState(() {
-        isLoading = false;
-      });
-    }
+        return TaskItem(
+          taskId,
+          taskName,
+          taskDescription,
+          taskPriority,
+          taskType,
+          color: taskColor,
+        );
+      }).toList();
+      tasklength = TaskData.alltasks.length;
+      print("All Tasks: ${TaskData.alltasks}");
+      isLoading = false;
+    });
+  } else {
+    print("Error: ${response['message']}"); // In case of an error
+    setState(() {
+      isLoading = false;
+    });
   }
+
+}
  
   @override
   Widget build(BuildContext context) {

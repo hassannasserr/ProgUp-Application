@@ -30,8 +30,8 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
   final Map<String, Color> sectionColors = {
     "Sleep Recommendations": const Color(0xFF386454),
     "Physical Activity Recommendations": const Color(0xFF456789),
-    "Study Recommendations": const Color(0xFF987654),
-    "Social Activity Recommendations": const Color(0xFF654321),
+    "Study Recommendations":  Colors.green,
+    "Social Activity Recommendations":  Colors.red,
   };
 
   final List<Recommendation> sleepRecommendations = [
