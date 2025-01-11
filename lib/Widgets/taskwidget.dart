@@ -1,14 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:srs_app/api_service.dart';
 
 class TaskContainer extends StatelessWidget {
   final String taskName;
   final Color color;
+  final int taskid;
+  final Function onDelete;
 
-  const TaskContainer({
+  TaskContainer({
     super.key,
     required this.taskName,
     required this.color,
+    required this.taskid,
+    required this.onDelete,
   });
+  final ApiService api = ApiService();
+  Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // User must tap a button to dismiss the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Are you sure you want to delete this task?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final result = await api.deleteTask(taskid);
+                if (result['success']) {
+                  onDelete(taskid);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result['message']),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result['message']),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +92,7 @@ class TaskContainer extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  print('Delete $taskName');
+                  _showDeleteConfirmationDialog(context);
                 },
                 icon: const Icon(
                   Icons.delete_outline,
@@ -70,7 +123,6 @@ class TaskContainer extends StatelessWidget {
 
 class TaskData {
   static List<TaskItem> alltasks = [];
-
 }
 
 class TaskItem {
@@ -81,22 +133,41 @@ class TaskItem {
   final String tasktype;
   Color color;
 
-  TaskItem(this.id, this.name, this.description, this.taskpriority, this.tasktype, {this.color = Colors.red});
+  TaskItem(
+      this.id, this.name, this.description, this.taskpriority, this.tasktype,
+      {this.color = Colors.red});
 }
-class TaskListView extends StatelessWidget {
+
+class TaskListView extends StatefulWidget {
   final List<TaskItem> tasks;
 
   const TaskListView({super.key, required this.tasks});
 
   @override
+  _TaskListViewState createState() => _TaskListViewState();
+}
+
+class _TaskListViewState extends State<TaskListView> {
+  void _deleteTask(int taskId) {
+    setState(() {
+      widget.tasks.removeWhere((task) => task.id == taskId);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: tasks.length,
+      itemCount: widget.tasks.length,
       itemBuilder: (context, index) {
-        final task = tasks[index];
+        final task = widget.tasks[index];
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: TaskContainer(taskName: task.name, color: task.color),
+          child: TaskContainer(
+            taskName: task.name,
+            color: task.color,
+            taskid: task.id,
+            onDelete: _deleteTask,
+          ),
         );
       },
     );

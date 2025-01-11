@@ -277,6 +277,12 @@ class _TasksPageState extends State<TasksPage> {
                             child: TaskContainer(
                               taskName: task.name,
                               color: task.color,
+                              taskid: task.id,
+                              onDelete: () {
+                                setState(() {
+                                  TaskData.alltasks.removeAt(index);
+                                });
+                              },
                             ),
                           );
                         },
