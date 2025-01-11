@@ -777,6 +777,50 @@ Future<Map<String, dynamic>> getActivitySummaries() async {
     };
   }
 }
+Future<Map<String, dynamic>> closeTask(int taskId) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        print('No token found. Please log in.');
+        return {
+          'success': false,
+          'message': 'User not authenticated.',
+        };
+      }
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/api/tasks/close/$taskId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // Task closed successfully
+        print('Task closed successfully.');
+        return {
+          'success': true,
+          'message': data['message'],
+        };
+      } else {
+        // Failed to close task
+        print('Failed to close task: ${data['message']}');
+        return {
+          'success': false,
+          'message': data['message'],
+        };
+      }
+    } catch (e) {
+      print('Error while closing task: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred while closing the task.',
+      };
+    }
+  }
 
 
 }
