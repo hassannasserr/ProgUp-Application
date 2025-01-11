@@ -118,7 +118,6 @@ class _TaskspageState extends State<HomePage> {
       });
     }
   }
-
  
   @override
   Widget build(BuildContext context) {
@@ -187,6 +186,13 @@ class _TaskspageState extends State<HomePage> {
                     child: TaskContainer(
                       taskName: task.name,
                       color: task.color,
+                      taskid: task.id,
+                      onDelete: () {
+                        setState(() {
+                          TaskData.alltasks.removeAt(index);
+                          tasklength = TaskData.alltasks.length;
+                        });
+                      },
                     ),
                   );
                 },
