@@ -278,12 +278,12 @@ class _TasksPageState extends State<TasksPage> {
                               taskName: task.name,
                               color: task.color,
                               taskid: task.id,
-                              onDelete: () {
+                              onDelete: (taskId) {
                                 setState(() {
-                                  TaskData.alltasks.removeAt(index);
+                                  TaskData.alltasks.removeWhere((task) => task.id == taskId);
                                 });
                               },
-                              onClose: () {
+                              onClose: (taskId) {
                                 // Add your onClose logic here
                               },
                             ),
