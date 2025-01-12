@@ -5,8 +5,8 @@ class TaskContainer extends StatelessWidget {
   final String taskName;
   final Color color;
   final int taskid;
-  final Function onDelete;
-  final Function onClose;
+  final void Function(int) onDelete;
+  final void Function(int) onClose;
 
   TaskContainer({
     super.key,
