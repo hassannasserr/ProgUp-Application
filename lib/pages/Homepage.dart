@@ -200,6 +200,9 @@ class _TaskspageState extends State<HomePage> {
                           tasklength = TaskData.alltasks.length;
                         });
                       },
+                      onClose: () {
+                        
+                      },
                     ),
                   );
                 },
