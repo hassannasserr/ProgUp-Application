@@ -3,7 +3,7 @@ import 'package:srs_app/api_service.dart';
 
 class TaskContainer extends StatelessWidget {
   final String taskName;
-  final Color color;
+  Color color;
   final int taskid;
   final void Function(int) onDelete;
   final void Function(int) onClose;
@@ -121,14 +121,21 @@ class TaskContainer extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  _closeTask(context);
+              StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return IconButton(
+                    onPressed: () {
+                      _closeTask(context);
+                      setState(() {
+                        color = Colors.green;
+                      });
+                    },
+                    icon: Icon(
+                      color == Colors.green ? Icons.check_circle_outline : Icons.circle_outlined,
+                      color: Colors.white,
+                    ),
+                  );
                 },
-                icon: const Icon(
-                  Icons.circle_outlined,
-                  color: Colors.white,
-                ),
               ),
               const SizedBox(width: 10),
               const Icon(
